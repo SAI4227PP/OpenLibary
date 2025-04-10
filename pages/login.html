@@ -5,30 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Open Library</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/login.css">
 </head>
 <body>
-    <nav class="main-nav">
-        <div class="nav-brand">Open Library</div>
-        <div class="nav-links">
-            <a href="../index.html">Home</a>
-            <a href="search.html">Search</a>
-            <a href="subjects.html">Subjects</a>
-            <a href="lists.html">Lists</a>
-            <a href="recent.html">What's New</a>
-            <button id="darkModeToggle">🌓</button>
-        </div>
-    </nav>
+    <div id="main-nav-placeholder"></div>
 
     <main class="auth-page">
         <div class="auth-container">
             <h1>Welcome Back</h1>
-            <p class="auth-subtitle">Sign in to your Open Library account</p>
+            <p class="auth-subtitle">Continue your learning journey</p>
 
             <form id="loginForm" class="auth-form">
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email">Email address</label>
                     <input type="email" id="email" required
-                        placeholder="Enter your email">
+                        placeholder="you@example.com">
                     <div class="error-message" id="emailError"></div>
                 </div>
 
@@ -44,43 +35,45 @@
                     <div class="error-message" id="passwordError"></div>
                 </div>
 
-                <div class="form-group remember-me">
-                    <label>
+                <div class="remember-me">
+                    <label class="checkbox-label">
                         <input type="checkbox" id="rememberMe">
-                        Remember me
+                        Keep me signed in
                     </label>
                     <a href="#" class="forgot-password">Forgot password?</a>
                 </div>
 
-                <div class="form-group">
-                    <button type="submit" class="btn-primary btn-block">
-                        Sign In
-                    </button>
-                </div>
+                <button type="submit" class="btn-primary">
+                    Sign in to your account
+                </button>
 
                 <div class="auth-separator">
-                    <span>OR</span>
+                    <span>or continue with</span>
                 </div>
 
                 <div class="social-auth">
-                    <button type="button" class="btn-secondary btn-block social-btn google">
-                        Continue with Google
+                    <button type="button" class="social-btn google">
+                        <img src="../assets/google-icon.svg" alt="Google" width="20">
+                        Sign in with Google
                     </button>
-                    <button type="button" class="btn-secondary btn-block social-btn github">
-                        Continue with GitHub
+                    <button type="button" class="social-btn github">
+                        <img src="../assets/github-icon.svg" alt="GitHub" width="20">
+                        Sign in with GitHub
                     </button>
                 </div>
             </form>
 
             <p class="auth-footer">
-                Don't have an account? 
-                <a href="signup.html">Create one</a>
+                New to Open Library? 
+                <a href="signup.html">Create an account</a>
             </p>
         </div>
-    </main>
 
-    <div id="loading" class="loading hidden"></div>
-    <div id="errorMessage" class="error-message hidden"></div>
+        <div id="loading" class="loading hidden">
+            <div class="loading-spinner"></div>
+        </div>
+        <div id="errorMessage" class="error-message hidden"></div>
+    </main>
 
     <footer>
         <div class="footer-content">
@@ -100,11 +93,12 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 Open Library. All rights reserved.</p>
+            <p>&copy; 2025 Open Library. Powered by Open Library APIs.</p>
         </div>
     </footer>
 
     <script src="../js/script.js"></script>
+    <script src="../js/loadNav.js"></script>
     <script src="../js/login.js"></script>
 </body>
 </html>

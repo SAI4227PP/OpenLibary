@@ -1,0 +1,129 @@
+<nav class="main-nav">
+    <div class="nav-container">
+        <div class="nav-brand">Open Library</div>
+        <div class="nav-links">
+            <a href="/index.html">Home</a>
+            <a href="/pages/search.html">Search</a>
+            <a href="/pages/subjects.html">Subjects</a>
+            <a href="/pages/lists.html">Lists</a>
+            <a href="/pages/recent.html">What's New</a>
+            <a href="/pages/mybooks.html" class="user-only hidden">My Books</a>
+            <a href="/pages/login.html" class="guest-only">Login</a>
+            <a href="/pages/signup.html" class="guest-only">Sign Up</a>
+            <button id="logoutBtn" class="user-only hidden">Logout</button>
+            <button id="darkModeToggle">🌓</button>
+        </div>
+        <button class="hamburger-menu" aria-label="Toggle navigation menu">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+    </div>
+</nav>
+
+<script>
+    // Check if required scripts are loaded
+    function checkRequiredScripts() {
+        if (typeof window.libraryUtils === 'undefined') {
+            console.error('Error: library utilities not loaded');
+            document.body.innerHTML = '<div class="error-message">Error: Required scripts failed to load. Please refresh the page.</div>';
+            return false;
+        }
+        return true;
+    }
+
+    // Initialize navigation
+    function initializeNavigation() {
+        if (!checkRequiredScripts()) return;
+
+        const nav = document.querySelector('.main-nav');
+        const hamburger = document.querySelector('.hamburger-menu');
+        const navLinks = document.querySelector('.nav-links');
+        
+        // Toggle menu function
+        function toggleMenu(show) {
+            navLinks.classList.toggle('active', show);
+            hamburger.classList.toggle('active', show);
+            // Prevent body scroll when menu is open
+            document.body.style.overflow = show ? 'hidden' : '';
+        }
+
+        // Toggle menu when hamburger is clicked
+        hamburger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isActive = navLinks.classList.contains('active');
+            toggleMenu(!isActive);
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!nav.contains(e.target)) {
+                toggleMenu(false);
+            }
+        });
+
+        // Handle window resize
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (window.innerWidth > 768) {
+                    toggleMenu(false);
+                }
+            }, 250);
+        });
+
+        // Close menu when a link is clicked
+        navLinks.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A') {
+                toggleMenu(false);
+            }
+        });
+
+        // Add swipe gesture support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        nav.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        nav.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchEndX - touchStartX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                // Swipe right to open, left to close
+                if (diff > 0 && !navLinks.classList.contains('active')) {
+                    toggleMenu(true);
+                } else if (diff < 0 && navLinks.classList.contains('active')) {
+                    toggleMenu(false);
+                }
+            }
+        }
+    }
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', initializeNavigation);
+</script>
+
+<style>
+    /* Error message styles */
+    .error-message {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #ff5757;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 4px;
+        text-align: center;
+        z-index: 9999;
+    }
+</style>

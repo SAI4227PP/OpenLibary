@@ -5,31 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Open Library - Your Gateway to Knowledge</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-    <nav class="main-nav">
-        <div class="nav-brand">Open Library</div>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="pages/search.html">Search</a>
-            <a href="pages/subjects.html">Subjects</a>
-            <a href="pages/lists.html">Lists</a>
-            <a href="pages/recent.html">What's New</a>
-            <a href="pages/mybooks.html" class="user-only hidden">My Books</a>
-            <a href="pages/login.html" class="guest-only">Login</a>
-            <a href="pages/signup.html" class="guest-only">Sign Up</a>
-            <button id="logoutBtn" class="user-only hidden">Logout</button>
-            <button id="darkModeToggle">🌓</button>
-        </div>
-    </nav>
+    <div id="main-nav-placeholder"></div>
+
 
     <header class="hero">
-        <div class="hero-content">
-            <h1>Explore the World of Books</h1>
-            <p>Your gateway to a vast collection of books, authors, and knowledge.</p>
+        <div class="hero__content">
+            <h1 class="hero__title">Explore the World of Books</h1>
+            <p class="hero__subtitle">Your gateway to a vast collection of books, authors, and knowledge.</p>
             <div class="hero-search">
                 <input type="text" id="quickSearch" placeholder="Search by title, author, or ISBN">
-                <button onclick="performSearch()">Search</button>
+                <button onclick="performSearch()" class="search-button">Search</button>
             </div>
             <div class="hero-stats">
                 <div class="stat-item">
@@ -54,9 +42,14 @@
                 <h2>Featured Books</h2>
                 <a href="pages/recent.html" class="view-all">View All</a>
             </div>
-            <div class="book-carousel" id="featuredBooks">
-                <button class="carousel-btn prev">❮</button>
-                <div class="carousel-container"></div>
+            <div class="featured-grid" id="featuredBooks">
+                <button class="carousel-btn prev" disabled>❮</button>
+                <div class="carousel-container">
+                    <div class="loading-state">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <div class="carousel-content"></div>
+                </div>
                 <button class="carousel-btn next">❯</button>
             </div>
         </section>
@@ -66,7 +59,9 @@
                 <h2>Trending Subjects</h2>
                 <a href="pages/subjects.html" class="view-all">View All</a>
             </div>
-            <div class="subject-grid" id="trendingSubjects"></div>
+            <div class="subject-grid" id="trendingSubjects">
+                <!-- Subjects will be dynamically added here -->
+            </div>
         </section>
 
         <section class="reading-lists">
@@ -74,7 +69,9 @@
                 <h2>Popular Reading Lists</h2>
                 <a href="pages/lists.html" class="view-all">View All</a>
             </div>
-            <div class="lists-grid" id="popularLists"></div>
+            <div class="lists-grid" id="popularLists">
+                <!-- Lists will be dynamically added here -->
+            </div>
         </section>
 
         <section class="recent-activity">
@@ -82,7 +79,9 @@
                 <h2>Recent Activity</h2>
                 <a href="pages/recent.html" class="view-all">View All</a>
             </div>
-            <div class="activity-feed" id="recentActivity"></div>
+            <div class="activity-feed" id="recentActivity">
+                <!-- Activity items will be dynamically added here -->
+            </div>
         </section>
 
         <section class="join-community">
@@ -145,6 +144,7 @@
         </div>
     </footer>
 
+    <script src="js/loadNav.js"></script>
     <script src="js/script.js"></script>
     <script>
         // Initialize homepage
@@ -189,13 +189,47 @@
             updateCarousel();
         });
 
+        async function loadFeaturedBooks() {
+            const container = document.querySelector('.carousel-content');
+            const loadingState = document.querySelector('.loading-state');
+            
+            try {
+                // Show loading state
+                loadingState.style.display = 'flex';
+                container.style.display = 'none';
+                
+                // Use the search API to get featured books
+                const response = await window.libraryUtils.searchBooks('subject:popular', 1);
+                const books = response.docs.slice(0, 8); // Take first 8 books
+                
+                // Create book cards using libraryUtils
+                const bookCards = books.map(book => {
+                    const card = window.libraryUtils.createBookCard(book);
+                    return card.outerHTML;
+                }).join('');
+                
+                container.innerHTML = bookCards;
+                
+                // Hide loading state and show content
+                loadingState.style.display = 'none';
+                container.style.display = 'flex';
+                
+                // Initialize carousel
+                updateCarousel();
+            } catch (error) {
+                console.error('Error loading featured books:', error);
+                loadingState.innerHTML = '<p>Error loading books. Please try again later.</p>';
+            }
+        }
+
         function updateCarousel() {
-            const slideWidth = carouselContainer.offsetWidth;
-            carouselContainer.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+            const container = document.querySelector('.carousel-content');
+            container.style.transform = `translateX(-${currentSlide * 240}px)`;
             
             // Update button states
             prevBtn.disabled = currentSlide === 0;
-            nextBtn.disabled = currentSlide === Math.ceil(featuredBooks.length / 4) - 1;
+            const maxSlide = Math.ceil(container.children.length / 4) - 1;
+            nextBtn.disabled = currentSlide >= maxSlide;
         }
 
         // Responsive carousel
@@ -206,3 +240,4 @@
     </script>
 </body>
 </html>
+``` 

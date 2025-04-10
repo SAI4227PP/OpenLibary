@@ -5,19 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - Open Library</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/signup.css">
 </head>
 <body>
-    <nav class="main-nav">
-        <div class="nav-brand">Open Library</div>
-        <div class="nav-links">
-            <a href="../index.html">Home</a>
-            <a href="search.html">Search</a>
-            <a href="subjects.html">Subjects</a>
-            <a href="lists.html">Lists</a>
-            <a href="recent.html">What's New</a>
-            <button id="darkModeToggle">🌓</button>
-        </div>
-    </nav>
+    <div id="main-nav-placeholder"></div>
 
     <main class="auth-page">
         <div class="auth-container">
@@ -112,28 +103,11 @@
     <div id="errorMessage" class="error-message hidden"></div>
 
     <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>About</h3>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Help</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Legal</h3>
-                <ul>
-                    <li><a href="#">Terms of Use</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 Open Library. All rights reserved.</p>
-        </div>
+        <p>&copy; 2025 Open Library. Powered by Open Library APIs.</p>
     </footer>
 
     <script src="../js/script.js"></script>
+    <script src="../js/loadNav.js"></script>
     <script src="../js/signup.js"></script>
 </body>
 </html>

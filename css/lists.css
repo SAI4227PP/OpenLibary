@@ -1,0 +1,222 @@
+.lists-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+}
+
+.lists-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.create-list-button {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.create-list-button:hover {
+    background: var(--secondary-color);
+}
+
+.lists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.list-card {
+    background: var(--surface-color);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    transition: transform var(--transition-fast);
+}
+
+.list-card:hover {
+    transform: translateY(-4px);
+}
+
+.list-cover {
+    position: relative;
+    height: 150px;
+    border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+    overflow: hidden;
+}
+
+.list-cover-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    height: 100%;
+}
+
+.cover-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.list-content {
+    padding: var(--spacing-lg);
+}
+
+.list-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+}
+
+.list-meta {
+    display: flex;
+    gap: var(--spacing-md);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.list-description {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.6;
+}
+
+.list-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+}
+
+.list-tag {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--background-color);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.list-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+}
+
+.action-button {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color var(--transition-fast);
+}
+
+.action-button:hover {
+    color: var(--primary-color);
+}
+
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-secondary);
+}
+
+/* Sort and filter controls */
+.list-controls {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.control-select {
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    background: var(--background-color);
+    color: var(--text-color);
+}
+
+/* Dark mode adjustments */
+.dark-mode .list-card {
+    background: var(--surface-color);
+}
+
+.dark-mode .list-tag {
+    background: var(--background-color);
+}
+
+.dark-mode .control-select {
+    background: var(--surface-color);
+    color: var(--text-color);
+}
+
+/* Create List Form */
+.create-list-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .lists-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .lists-header {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        text-align: center;
+    }
+
+    .lists-container {
+        padding: var(--spacing-md);
+    }
+
+    .list-controls {
+        justify-content: center;
+    }
+
+    .lists-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .create-list-form {
+        padding: var(--spacing-md);
+    }
+}
+
+@media (max-width: 576px) {
+    .lists-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .list-preview {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .list-meta {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+}

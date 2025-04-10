@@ -1,0 +1,309 @@
+.mybooks-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+}
+
+.reading-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.stat-card {
+    background: var(--surface-color);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-lg);
+    text-align: center;
+    box-shadow: var(--card-shadow);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-xs);
+}
+
+.stat-label {
+    color: var(--text-secondary);
+}
+
+.reading-lists {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+.reading-section {
+    background: var(--surface-color);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-lg);
+    box-shadow: var(--card-shadow);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.view-toggle {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.view-button {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    background: var(--background-color);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.view-button.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.book-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.book-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm);
+    background: var(--background-color);
+    border-radius: var(--border-radius-sm);
+    transition: transform var(--transition-fast);
+}
+
+.book-item:hover {
+    transform: translateX(var(--spacing-xs));
+}
+
+.book-cover-small {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    border-radius: var(--border-radius-sm);
+}
+
+.book-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--spacing-xs);
+}
+
+.book-title {
+    font-weight: 600;
+}
+
+.book-author {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.reading-progress {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.progress-bar {
+    width: 100px;
+    height: 4px;
+    background: var(--border-color);
+    border-radius: var(--border-radius-sm);
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--primary-color);
+    border-radius: var(--border-radius-sm);
+}
+
+.progress-text {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+/* Grid view styles */
+.grid-view .book-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.grid-view .book-item {
+    grid-template-columns: 1fr;
+    text-align: center;
+}
+
+.grid-view .book-cover-small {
+    width: 100%;
+}
+
+/* Dark mode adjustments */
+.dark-mode .stat-card,
+.dark-mode .reading-section {
+    background: var(--surface-color);
+}
+
+.dark-mode .book-item {
+    background: var(--background-color);
+}
+
+/* Collections grid */
+.collections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.collection-card {
+    background: var(--surface-color);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    transition: transform var(--transition-fast);
+}
+
+.collection-card:hover {
+    transform: translateY(-4px);
+}
+
+.collection-header {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.collection-title {
+    font-weight: 600;
+}
+
+.collection-count {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-xs);
+    padding: var(--spacing-md);
+}
+
+.book-thumbnail {
+    aspect-ratio: 2/3;
+    width: 100%;
+    object-fit: cover;
+    border-radius: var(--border-radius-sm);
+}
+
+/* Reading progress */
+.progress-section {
+    margin: var(--spacing-xl) 0;
+}
+
+.progress-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.progress-card {
+    background: var(--surface-color);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-lg);
+}
+
+.progress-header {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.progress-cover {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    border-radius: var(--border-radius-sm);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .collections-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .mybooks-container {
+        padding: var(--spacing-md);
+    }
+
+    .reading-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .collections-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .reading-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .progress-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .book-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .reading-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .book-item {
+        grid-template-columns: 60px 1fr;
+    }
+
+    .reading-progress {
+        display: none;
+    }
+}
+
+@media (max-width: 400px) {
+    .progress-header {
+        grid-template-columns: 60px 1fr;
+    }
+}

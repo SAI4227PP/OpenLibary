@@ -5,23 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>What's New - Open Library</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/recent.css">
 </head>
 <body>
-    <nav class="main-nav">
-        <div class="nav-brand">Open Library</div>
-        <div class="nav-links">
-            <a href="../index.html">Home</a>
-            <a href="search.html">Search</a>
-            <a href="subjects.html">Subjects</a>
-            <a href="lists.html">Lists</a>
-            <a href="recent.html">What's New</a>
-            <a href="mybooks.html" class="user-only hidden">My Books</a>
-            <a href="login.html" class="guest-only">Login</a>
-            <a href="signup.html" class="guest-only">Sign Up</a>
-            <button id="logoutBtn" class="user-only hidden">Logout</button>
-            <button id="darkModeToggle">🌓</button>
-        </div>
-    </nav>
+    <div id="main-nav-placeholder"></div>
 
     <main class="recent-changes">
         <section class="recent-header">
@@ -71,6 +58,7 @@
     </footer>
 
     <script src="../js/script.js"></script>
+    <script src="../js/loadNav.js"></script>
     <script src="../js/recent.js"></script>
 </body>
 </html>

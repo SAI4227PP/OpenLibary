@@ -35,15 +35,15 @@ window.libraryUtils = {
         const card = document.createElement('div');
         card.className = 'book-card';
         
-        // Get cover image URL
-        const coverId = book.cover_i || book.covers?.[0];
+        // Get cover image URL (using Open Library cover ID)
+        const coverId = book.cover_i;
         const coverUrl = coverId ? 
-            `${COVERS_BASE_URL}/b/id/${coverId}-M.jpg` : 
+            `${COVERS_BASE_URL}/id/${coverId}-M.jpg` : 
             'images/default-cover.png';
 
         card.innerHTML = `
             <div class="book-cover">
-                <img src="${coverUrl}" alt="${book.title}" 
+                <img src="${coverUrl}" alt="${book.title}" loading="lazy"
                     onerror="this.src='images/default-cover.png'">
             </div>
             <div class="book-info">
@@ -51,11 +51,6 @@ window.libraryUtils = {
                 <p class="book-author">${book.author_name?.[0] || 'Unknown Author'}</p>
                 ${book.first_publish_year ? 
                     `<p class="book-year">${book.first_publish_year}</p>` : ''}
-            </div>
-            <div class="book-actions">
-                <button onclick="window.location.href='book.html?key=${book.key}'">
-                    View Details
-                </button>
             </div>
         `;
 
@@ -122,23 +117,56 @@ function toggleDarkMode() {
 // Homepage functions
 async function loadFeaturedBooks() {
     try {
-        const response = await fetch(`${API_BASE_URL}/trending/daily.json`);
-        const data = await response.json();
-        const container = document.querySelector('.carousel-container');
+        const container = document.querySelector('.carousel-content');
+        const loadingState = document.querySelector('.loading-state');
         
         if (!container) return;
         
-        container.innerHTML = '';
-        data.works.forEach(book => {
-            container.appendChild(window.libraryUtils.createBookCard(book));
-        });
+        // Show loading state
+        loadingState.style.display = 'flex';
+        container.style.display = 'none';
+
+        // Get popular books
+        const response = await window.libraryUtils.searchBooks('subject:fiction', 1);
+        const books = response.docs.slice(0, 12); // Get 12 books for the carousel
+
+        // Create and append book cards
+        const bookCards = books.map(book => {
+            const card = window.libraryUtils.createBookCard(book);
+            card.style.flex = '0 0 250px'; // Set fixed width for carousel items
+            return card.outerHTML;
+        }).join('');
+
+        container.innerHTML = bookCards;
+        
+        // Hide loading state and show content
+        loadingState.style.display = 'none';
+        container.style.display = 'flex';
         
         // Initialize carousel
         updateCarousel();
         
+        // Enable/disable buttons based on content
+        const maxSlide = Math.ceil(books.length / 4) - 1;
+        document.querySelector('.carousel-btn.next').disabled = maxSlide <= 0;
+        
     } catch (error) {
         console.error('Error loading featured books:', error);
+        loadingState.innerHTML = '<p>Error loading books. Please try again later.</p>';
     }
+}
+
+function updateCarousel() {
+    const container = document.querySelector('.carousel-content');
+    const carouselWidth = container.parentElement.offsetWidth;
+    const slideWidth = Math.min(carouselWidth, 1000); // Maximum width of 1000px
+    
+    container.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+    
+    // Update button states
+    const maxSlide = Math.ceil(container.children.length / 4) - 1;
+    document.querySelector('.carousel-btn.prev').disabled = currentSlide === 0;
+    document.querySelector('.carousel-btn.next').disabled = currentSlide >= maxSlide;
 }
 
 async function loadTrendingSubjects() {
@@ -216,33 +244,63 @@ async function loadPopularLists() {
 
 async function loadRecentActivity() {
     try {
-        const response = await fetch(`${API_BASE_URL}/recentchanges.json`);
-        const data = await response.json();
         const container = document.getElementById('recentActivity');
-        
         if (!container) return;
 
-        const activitiesHTML = data.changes.slice(0, 5).map(change => `
-            <div class="activity-item">
-                <div class="activity-icon">${getActivityIcon(change.type)}</div>
-                <div class="activity-details">
-                    <div class="activity-title">
-                        ${change.title || 'Untitled'}
-                    </div>
-                    <div class="activity-meta">
-                        ${change.author ? `by ${change.author}` : ''}
-                        <span class="activity-time">
-                            ${window.libraryUtils.formatDate(change.timestamp)}
-                        </span>
+        container.innerHTML = `
+            <div class="loading-state">
+                <div class="loading-spinner"></div>
+            </div>`;
+
+        // Using trending works API instead
+        const response = await fetch(`${API_BASE_URL}/trending/now.json`);
+        const data = await response.json();
+        
+        // Check if data exists and has works array
+        if (!data || !data.works || !Array.isArray(data.works)) {
+            throw new Error('Invalid data format received from API');
+        }
+
+        const recentActivities = data.works
+            .slice(0, 5)
+            .map(work => ({
+                title: work.title,
+                type: 'add-book',
+                author: work.author_names?.[0] || 'Unknown Author',
+                timestamp: new Date().toISOString() // Current time as these are trending now
+            }))
+            .map(activity => `
+                <div class="activity-item">
+                    <div class="activity-icon">📚</div>
+                    <div class="activity-details">
+                        <div class="activity-title">
+                            ${activity.title}
+                        </div>
+                        <div class="activity-meta">
+                            by ${activity.author}
+                            <span class="activity-time">
+                                ${window.libraryUtils.formatDate(activity.timestamp)}
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `).join('');
+            `).join('');
 
-        container.innerHTML = activitiesHTML;
+        if (recentActivities) {
+            container.innerHTML = recentActivities;
+        } else {
+            container.innerHTML = '<p>No recent activity to display</p>';
+        }
 
     } catch (error) {
         console.error('Error loading recent activity:', error);
+        const container = document.getElementById('recentActivity');
+        if (container) {
+            container.innerHTML = `
+                <div class="error-state">
+                    <p>Unable to load recent activity. Please try again later.</p>
+                </div>`;
+        }
     }
 }
 
@@ -271,14 +329,65 @@ async function loadLibraryStats() {
 document.addEventListener('DOMContentLoaded', () => {
     initializeDarkMode();
     updateAuthUI();
+    
+    // Handle dynamic navigation elements
+    const setupNavigationHandlers = () => {
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const hamburger = document.querySelector('.hamburger-menu');
+        const navLinks = document.querySelector('.nav-links');
+        const nav = document.querySelector('.nav-container');
+        
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('click', toggleDarkMode);
+        }
+        
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', logout);
+        }
+        
+        if (hamburger && navLinks && nav) {
+            function toggleMenu(show) {
+                navLinks.classList.toggle('active', show);
+                hamburger.classList.toggle('active', show);
+            }
+            
+            // Toggle menu when hamburger is clicked
+            hamburger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isActive = navLinks.classList.contains('active');
+                toggleMenu(!isActive);
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!nav.contains(e.target)) {
+                    toggleMenu(false);
+                }
+            });
+
+            // Close menu when a link is clicked
+            navLinks.addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') {
+                    toggleMenu(false);
+                }
+            });
+        }
+    };
+
+    // Initial setup
+    setupNavigationHandlers();
+
+    // Setup handlers again when navigation is loaded dynamically
+    document.addEventListener('navigationLoaded', setupNavigationHandlers);
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+        const navLinks = document.querySelector('.nav-links');
+        if (window.innerWidth > 768 && navLinks) {
+            navLinks.classList.remove('active');
+            const hamburger = document.querySelector('.hamburger-menu');
+            if (hamburger) hamburger.classList.remove('active');
+        }
+    });
 });
-
-const darkModeToggle = document.getElementById('darkModeToggle');
-if (darkModeToggle) {
-    darkModeToggle.addEventListener('click', toggleDarkMode);
-}
-
-const logoutBtn = document.getElementById('logoutBtn');
-if (logoutBtn) {
-    logoutBtn.addEventListener('click', logout);
-}

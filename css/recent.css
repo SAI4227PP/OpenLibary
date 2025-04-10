@@ -1,0 +1,310 @@
+.recent-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+}
+
+.activity-filters {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+}
+
+.filter-chip {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--surface-color);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.filter-chip:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.filter-chip.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.activity-timeline {
+    position: relative;
+    padding-left: var(--spacing-xl);
+}
+
+.timeline-line {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border-color);
+}
+
+.activity-item {
+    position: relative;
+    margin-bottom: var(--spacing-xl);
+    padding-left: var(--spacing-xl);
+}
+
+.activity-item::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: var(--spacing-sm);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    border: 2px solid var(--background-color);
+}
+
+.activity-card {
+    background: var(--surface-color);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-lg);
+    box-shadow: var(--card-shadow);
+}
+
+.activity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-md);
+}
+
+.activity-type {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.activity-time {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.activity-content {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: var(--spacing-md);
+}
+
+.activity-image {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    border-radius: var(--border-radius-sm);
+}
+
+.activity-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.activity-title {
+    font-weight: 600;
+}
+
+.activity-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.activity-meta {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-sm);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.load-more-button {
+    display: block;
+    width: 200px;
+    margin: var(--spacing-xl) auto;
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-align: center;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.load-more-button:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* Dark mode adjustments */
+.dark-mode .activity-item::before {
+    border-color: var(--background-color);
+}
+
+.dark-mode .activity-card {
+    background: var(--surface-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .activity-filters {
+        justify-content: center;
+    }
+
+    .activity-content {
+        grid-template-columns: 60px 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .activity-content {
+        grid-template-columns: 1fr;
+    }
+
+    .activity-image {
+        width: 60px;
+    }
+
+    .activity-header {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+}
+
+.recent-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.recent-card {
+    background: var(--surface-color);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    transition: transform var(--transition-fast);
+}
+
+.recent-card:hover {
+    transform: translateY(-4px);
+}
+
+.book-cover {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2/3;
+}
+
+.book-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.book-info {
+    padding: var(--spacing-md);
+}
+
+.book-title {
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-xs);
+    font-weight: 600;
+}
+
+.book-author {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.book-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.time-added {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+/* Filters */
+.filter-controls {
+    margin-bottom: var(--spacing-xl);
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.filter-select {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    background: var(--background-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .recent-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .recent-container {
+        padding: var(--spacing-md);
+    }
+
+    .filter-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+@media (max-width: 576px) {
+    .recent-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+
+    .book-info {
+        padding: var(--spacing-sm);
+    }
+
+    .book-title {
+        font-size: 1rem;
+    }
+
+    .book-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+}
+
+@media (max-width: 400px) {
+    .recent-grid {
+        grid-template-columns: 1fr;
+    }
+}
