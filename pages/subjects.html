@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse by Subject - Open Library</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-brand">Open Library</div>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="search.html">Search</a>
+            <a href="subjects.html">Subjects</a>
+            <a href="lists.html">Lists</a>
+            <a href="recent.html">What's New</a>
+            <a href="mybooks.html" class="user-only hidden">My Books</a>
+            <a href="login.html" class="guest-only">Login</a>
+            <a href="signup.html" class="guest-only">Sign Up</a>
+            <button id="logoutBtn" class="user-only hidden">Logout</button>
+            <button id="darkModeToggle">🌓</button>
+        </div>
+    </nav>
+
+    <main class="subjects-page">
+        <section class="subjects-header">
+            <h1>Browse by Subject</h1>
+            <div class="subject-search">
+                <input type="text" id="subjectSearch" placeholder="Search subjects...">
+            </div>
+        </section>
+
+        <section class="popular-subjects">
+            <h2>Popular Subjects</h2>
+            <div class="subject-grid" id="popularSubjects">
+                <div class="subject-card" data-subject="fiction">
+                    <h3>Fiction</h3>
+                    <span class="book-count">Loading...</span>
+                </div>
+                <div class="subject-card" data-subject="science">
+                    <h3>Science</h3>
+                    <span class="book-count">Loading...</span>
+                </div>
+                <div class="subject-card" data-subject="history">
+                    <h3>History</h3>
+                    <span class="book-count">Loading...</span>
+                </div>
+                <div class="subject-card" data-subject="fantasy">
+                    <h3>Fantasy</h3>
+                    <span class="book-count">Loading...</span>
+                </div>
+                <div class="subject-card" data-subject="biography">
+                    <h3>Biography</h3>
+                    <span class="book-count">Loading...</span>
+                </div>
+                <div class="subject-card" data-subject="poetry">
+                    <h3>Poetry</h3>
+                    <span class="book-count">Loading...</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="subjectContent" class="subject-content hidden">
+            <div class="subject-header">
+                <h2 id="currentSubject"></h2>
+                <div class="subject-stats" id="subjectStats"></div>
+            </div>
+
+            <div class="subject-controls">
+                <select id="sortBooks">
+                    <option value="new">Newest First</option>
+                    <option value="old">Oldest First</option>
+                    <option value="title">Title A-Z</option>
+                    <option value="rating">Highest Rated</option>
+                </select>
+            </div>
+
+            <div id="subjectBooks" class="book-grid"></div>
+            
+            <div id="subjectPagination" class="pagination hidden">
+                <button id="prevPage" disabled>Previous</button>
+                <span id="currentPage">Page 1</span>
+                <button id="nextPage">Next</button>
+            </div>
+        </section>
+
+        <div id="loading" class="loading hidden"></div>
+        
+        <div id="errorMessage" class="error-message hidden">
+            <p>Error loading subject data. Please try again later.</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Open Library. Powered by Open Library APIs.</p>
+    </footer>
+
+    <script src="../js/script.js"></script>
+    <script src="../js/subjects.js"></script>
+</body>
+</html>

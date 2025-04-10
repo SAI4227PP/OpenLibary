@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Library - Your Gateway to Knowledge</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-brand">Open Library</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="pages/search.html">Search</a>
+            <a href="pages/subjects.html">Subjects</a>
+            <a href="pages/lists.html">Lists</a>
+            <a href="pages/recent.html">What's New</a>
+            <a href="pages/mybooks.html" class="user-only hidden">My Books</a>
+            <a href="pages/login.html" class="guest-only">Login</a>
+            <a href="pages/signup.html" class="guest-only">Sign Up</a>
+            <button id="logoutBtn" class="user-only hidden">Logout</button>
+            <button id="darkModeToggle">🌓</button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Explore the World of Books</h1>
+            <p>Your gateway to a vast collection of books, authors, and knowledge.</p>
+            <div class="hero-search">
+                <input type="text" id="quickSearch" placeholder="Search by title, author, or ISBN">
+                <button onclick="performSearch()">Search</button>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span id="totalBooks">Loading...</span>
+                    <label>Books</label>
+                </div>
+                <div class="stat-item">
+                    <span id="totalAuthors">Loading...</span>
+                    <label>Authors</label>
+                </div>
+                <div class="stat-item">
+                    <span id="totalSubjects">Loading...</span>
+                    <label>Subjects</label>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="home-content">
+        <section class="featured-books">
+            <div class="section-header">
+                <h2>Featured Books</h2>
+                <a href="pages/recent.html" class="view-all">View All</a>
+            </div>
+            <div class="book-carousel" id="featuredBooks">
+                <button class="carousel-btn prev">❮</button>
+                <div class="carousel-container"></div>
+                <button class="carousel-btn next">❯</button>
+            </div>
+        </section>
+
+        <section class="trending-subjects">
+            <div class="section-header">
+                <h2>Trending Subjects</h2>
+                <a href="pages/subjects.html" class="view-all">View All</a>
+            </div>
+            <div class="subject-grid" id="trendingSubjects"></div>
+        </section>
+
+        <section class="reading-lists">
+            <div class="section-header">
+                <h2>Popular Reading Lists</h2>
+                <a href="pages/lists.html" class="view-all">View All</a>
+            </div>
+            <div class="lists-grid" id="popularLists"></div>
+        </section>
+
+        <section class="recent-activity">
+            <div class="section-header">
+                <h2>Recent Activity</h2>
+                <a href="pages/recent.html" class="view-all">View All</a>
+            </div>
+            <div class="activity-feed" id="recentActivity"></div>
+        </section>
+
+        <section class="join-community">
+            <h2>Join Our Community</h2>
+            <p>Create an account to track your reading, create lists, and contribute to the library.</p>
+            <div class="cta-buttons">
+                <a href="pages/signup.html" class="btn-primary">Sign Up Now</a>
+                <a href="pages/login.html" class="btn-secondary">Login</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Press</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Help</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Discover</h3>
+                <ul>
+                    <li><a href="pages/subjects.html">Subjects</a></li>
+                    <li><a href="pages/recent.html">New Books</a></li>
+                    <li><a href="pages/lists.html">Reading Lists</a></li>
+                    <li><a href="pages/search.html">Advanced Search</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Community</h3>
+                <ul>
+                    <li><a href="#">Volunteer</a></li>
+                    <li><a href="#">Donate Books</a></li>
+                    <li><a href="#">Contribute</a></li>
+                    <li><a href="#">Guidelines</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect</h3>
+                <ul>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Newsletter</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Open Library. Powered by Open Library APIs.</p>
+            <div class="footer-links">
+                <a href="#">Terms of Use</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Cookie Policy</a>
+                <a href="#">Accessibility</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Initialize homepage
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFeaturedBooks();
+            loadTrendingSubjects();
+            loadPopularLists();
+            loadRecentActivity();
+            loadLibraryStats();
+            updateAuthUI();
+        });
+
+        // Quick search functionality
+        function performSearch() {
+            const searchQuery = document.getElementById('quickSearch').value.trim();
+            if (searchQuery) {
+                window.location.href = `pages/search.html?q=${encodeURIComponent(searchQuery)}`;
+            }
+        }
+
+        // Handle Enter key in search box
+        document.getElementById('quickSearch').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Featured books carousel navigation
+        const carouselContainer = document.querySelector('.carousel-container');
+        const prevBtn = document.querySelector('.carousel-btn.prev');
+        const nextBtn = document.querySelector('.carousel-btn.next');
+        let currentSlide = 0;
+
+        prevBtn.addEventListener('click', () => {
+            currentSlide = Math.max(currentSlide - 1, 0);
+            updateCarousel();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            const maxSlide = Math.ceil(featuredBooks.length / 4) - 1;
+            currentSlide = Math.min(currentSlide + 1, maxSlide);
+            updateCarousel();
+        });
+
+        function updateCarousel() {
+            const slideWidth = carouselContainer.offsetWidth;
+            carouselContainer.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+            
+            // Update button states
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === Math.ceil(featuredBooks.length / 4) - 1;
+        }
+
+        // Responsive carousel
+        window.addEventListener('resize', () => {
+            currentSlide = 0;
+            updateCarousel();
+        });
+    </script>
+</body>
+</html>

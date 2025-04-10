@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - Open Library</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-brand">Open Library</div>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="search.html">Search</a>
+            <a href="subjects.html">Subjects</a>
+            <a href="lists.html">Lists</a>
+            <a href="recent.html">What's New</a>
+            <a href="mybooks.html" class="user-only hidden">My Books</a>
+            <a href="login.html" class="guest-only">Login</a>
+            <a href="signup.html" class="guest-only">Sign Up</a>
+            <button id="logoutBtn" class="user-only hidden">Logout</button>
+            <button id="darkModeToggle">🌓</button>
+        </div>
+    </nav>
+
+    <main class="error-page">
+        <div class="error-container">
+            <div class="error-icon">📚</div>
+            <h1>404 - Page Not Found</h1>
+            <p>Oops! Looks like this page is missing from our library.</p>
+            
+            <div class="error-suggestions">
+                <h2>Here's what you can do:</h2>
+                <ul>
+                    <li><a href="../index.html">Return to Homepage</a></li>
+                    <li><a href="search.html">Search for Books</a></li>
+                    <li><a href="subjects.html">Browse by Subject</a></li>
+                    <li><a href="recent.html">Check What's New</a></li>
+                </ul>
+            </div>
+
+            <div class="error-search">
+                <p>Or try searching for what you're looking for:</p>
+                <div class="search-box">
+                    <input type="text" id="quickSearch" placeholder="Search by title, author, or ISBN">
+                    <button onclick="performSearch()">Search</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Open Library. Powered by Open Library APIs.</p>
+    </footer>
+
+    <script src="../js/script.js"></script>
+    <script>
+        function performSearch() {
+            const searchQuery = document.getElementById('quickSearch').value.trim();
+            if (searchQuery) {
+                window.location.href = `search.html?q=${encodeURIComponent(searchQuery)}`;
+            }
+        }
+
+        // Handle Enter key in search box
+        document.getElementById('quickSearch').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    </script>
+</body>
+</html>

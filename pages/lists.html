@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Lists - Open Library</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-brand">Open Library</div>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="search.html">Search</a>
+            <a href="subjects.html">Subjects</a>
+            <a href="lists.html">Lists</a>
+            <a href="recent.html">What's New</a>
+            <a href="mybooks.html" class="user-only hidden">My Books</a>
+            <a href="login.html" class="guest-only">Login</a>
+            <a href="signup.html" class="guest-only">Sign Up</a>
+            <button id="logoutBtn" class="user-only hidden">Logout</button>
+            <button id="darkModeToggle">🌓</button>
+        </div>
+    </nav>
+
+    <main class="lists-page">
+        <section class="lists-header">
+            <h1>Reading Lists</h1>
+            <button id="createListBtn" class="btn-primary user-only hidden">
+                Create New List
+            </button>
+        </section>
+
+        <section class="featured-lists">
+            <h2>Featured Lists</h2>
+            <div class="lists-grid" id="featuredLists">
+                <div class="list-card">
+                    <h3>Best Classics</h3>
+                    <p>Essential classics everyone should read</p>
+                    <span class="book-count">Loading...</span>
+                </div>
+                <div class="list-card">
+                    <h3>Science Picks</h3>
+                    <p>Top science books for curious minds</p>
+                    <span class="book-count">Loading...</span>
+                </div>
+                <div class="list-card">
+                    <h3>Must-Read Fantasy</h3>
+                    <p>Epic fantasy adventures</p>
+                    <span class="book-count">Loading...</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="user-lists user-only hidden">
+            <h2>My Lists</h2>
+            <div class="lists-grid" id="userLists"></div>
+        </section>
+
+        <!-- Create List Modal -->
+        <div id="createListModal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Create New Reading List</h2>
+                <form id="createListForm">
+                    <div class="form-group">
+                        <label for="listName">List Name</label>
+                        <input type="text" id="listName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="listDescription">Description</label>
+                        <textarea id="listDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="listPrivate">
+                            Make this list private
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn-primary">Create List</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="loading" class="loading hidden"></div>
+        
+        <div id="errorMessage" class="error-message hidden">
+            <p>Error loading reading lists. Please try again later.</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Open Library. Powered by Open Library APIs.</p>
+    </footer>
+
+    <script src="../js/script.js"></script>
+    <script src="../js/lists.js"></script>
+</body>
+</html>

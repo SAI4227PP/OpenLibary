@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Books - Open Library</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-brand">Open Library</div>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="search.html">Search</a>
+            <a href="subjects.html">Subjects</a>
+            <a href="lists.html">Lists</a>
+            <a href="recent.html">What's New</a>
+            <a href="mybooks.html" class="user-only hidden">My Books</a>
+            <a href="login.html" class="guest-only">Login</a>
+            <a href="signup.html" class="guest-only">Sign Up</a>
+            <button id="logoutBtn" class="user-only hidden">Logout</button>
+            <button id="darkModeToggle">🌓</button>
+        </div>
+    </nav>
+
+    <main class="mybooks-page">
+        <div id="authRequired" class="auth-required hidden">
+            <h2>Please log in to view your books</h2>
+            <p>You need to be logged in to access your personal reading log.</p>
+            <a href="login.html" class="btn-primary">Login</a>
+            <span class="separator">or</span>
+            <a href="signup.html" class="btn-secondary">Create Account</a>
+        </div>
+
+        <div id="mybooksContent" class="hidden">
+            <section class="mybooks-header">
+                <h1>My Books</h1>
+                <div class="reading-stats">
+                    <div class="stat-item">
+                        <span id="totalBooks">0</span>
+                        <label>Total Books</label>
+                    </div>
+                    <div class="stat-item">
+                        <span id="currentlyReading">0</span>
+                        <label>Currently Reading</label>
+                    </div>
+                    <div class="stat-item">
+                        <span id="booksThisYear">0</span>
+                        <label>Books This Year</label>
+                    </div>
+                </div>
+            </section>
+
+            <section class="reading-sections">
+                <div class="section-tabs">
+                    <button class="tab-btn active" data-tab="favorites">Favorites</button>
+                    <button class="tab-btn" data-tab="currently">Currently Reading</button>
+                    <button class="tab-btn" data-tab="wantto">Want to Read</button>
+                    <button class="tab-btn" data-tab="completed">Completed</button>
+                </div>
+
+                <div class="tab-content">
+                    <div id="favorites" class="tab-pane active">
+                        <div class="book-grid" id="favoritesGrid"></div>
+                    </div>
+                    <div id="currently" class="tab-pane">
+                        <div class="book-grid" id="currentlyGrid"></div>
+                    </div>
+                    <div id="wantto" class="tab-pane">
+                        <div class="book-grid" id="wanttoGrid"></div>
+                    </div>
+                    <div id="completed" class="tab-pane">
+                        <div class="book-grid" id="completedGrid">
+                            <div class="filter-bar">
+                                <select id="yearFilter">
+                                    <option value="all">All Years</option>
+                                </select>
+                                <select id="ratingFilter">
+                                    <option value="all">All Ratings</option>
+                                    <option value="5">5 Stars</option>
+                                    <option value="4">4+ Stars</option>
+                                    <option value="3">3+ Stars</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Add Book Modal -->
+            <div id="addBookModal" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h2>Add Book to Reading List</h2>
+                    <form id="addBookForm">
+                        <div class="form-group">
+                            <label for="readingStatus">Status</label>
+                            <select id="readingStatus" required>
+                                <option value="currently">Currently Reading</option>
+                                <option value="wantto">Want to Read</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="dateCompletedGroup">
+                            <label for="dateCompleted">Date Completed</label>
+                            <input type="date" id="dateCompleted">
+                        </div>
+                        <div class="form-group" id="ratingGroup">
+                            <label for="rating">Rating</label>
+                            <div class="star-rating">
+                                <input type="radio" name="rating" value="5" id="star5">
+                                <label for="star5">★</label>
+                                <input type="radio" name="rating" value="4" id="star4">
+                                <label for="star4">★</label>
+                                <input type="radio" name="rating" value="3" id="star3">
+                                <label for="star3">★</label>
+                                <input type="radio" name="rating" value="2" id="star2">
+                                <label for="star2">★</label>
+                                <input type="radio" name="rating" value="1" id="star1">
+                                <label for="star1">★</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Notes (optional)</label>
+                            <textarea id="notes" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn-primary">Add Book</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading" class="loading hidden"></div>
+        
+        <div id="errorMessage" class="error-message hidden">
+            <p>Error loading your books. Please try again later.</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Open Library. Powered by Open Library APIs.</p>
+    </footer>
+
+    <script src="../js/script.js"></script>
+    <script src="../js/mybooks.js"></script>
+</body>
+</html>

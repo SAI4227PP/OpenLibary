@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Author Profile - Open Library</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-brand">Open Library</div>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="search.html">Search</a>
+            <a href="subjects.html">Subjects</a>
+            <a href="lists.html">Lists</a>
+            <a href="recent.html">What's New</a>
+            <a href="mybooks.html" class="user-only hidden">My Books</a>
+            <a href="login.html" class="guest-only">Login</a>
+            <a href="signup.html" class="guest-only">Sign Up</a>
+            <button id="logoutBtn" class="user-only hidden">Logout</button>
+            <button id="darkModeToggle">🌓</button>
+        </div>
+    </nav>
+
+    <main class="author-profile">
+        <div id="loading" class="loading"></div>
+        
+        <div id="authorContent" class="hidden">
+            <section class="author-header">
+                <div class="author-photo">
+                    <img id="authorPhoto" src="" alt="Author Photo">
+                </div>
+                <div class="author-info">
+                    <h1 id="authorName"></h1>
+                    <p id="authorDates"></p>
+                    <div id="authorStats" class="author-stats"></div>
+                </div>
+            </section>
+
+            <section class="author-bio">
+                <h2>Biography</h2>
+                <div id="authorBio"></div>
+            </section>
+
+            <section class="author-works">
+                <h2>Works</h2>
+                <div class="works-filter">
+                    <select id="sortWorks">
+                        <option value="published">Sort by Publication Date</option>
+                        <option value="title">Sort by Title</option>
+                        <option value="rating">Sort by Rating</option>
+                    </select>
+                </div>
+                <div id="authorWorks" class="book-grid"></div>
+                <div id="worksPagination" class="pagination hidden">
+                    <button id="prevWorks" disabled>Previous</button>
+                    <span id="worksPage">Page 1</span>
+                    <button id="nextWorks">Next</button>
+                </div>
+            </section>
+
+            <section class="author-links">
+                <h2>External Links</h2>
+                <div id="authorLinks"></div>
+            </section>
+        </div>
+
+        <div id="errorMessage" class="error-message hidden">
+            <p>Sorry, we couldn't find this author. Please try another one.</p>
+            <a href="search.html" class="back-button">Back to Search</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Open Library. Powered by Open Library APIs.</p>
+    </footer>
+
+    <script src="../js/script.js"></script>
+    <script src="../js/author.js"></script>
+</body>
+</html>

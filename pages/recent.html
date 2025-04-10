@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What's New - Open Library</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-brand">Open Library</div>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="search.html">Search</a>
+            <a href="subjects.html">Subjects</a>
+            <a href="lists.html">Lists</a>
+            <a href="recent.html">What's New</a>
+            <a href="mybooks.html" class="user-only hidden">My Books</a>
+            <a href="login.html" class="guest-only">Login</a>
+            <a href="signup.html" class="guest-only">Sign Up</a>
+            <button id="logoutBtn" class="user-only hidden">Logout</button>
+            <button id="darkModeToggle">🌓</button>
+        </div>
+    </nav>
+
+    <main class="recent-changes">
+        <section class="recent-header">
+            <h1>What's New in Open Library</h1>
+            <div class="recent-filters">
+                <select id="changeType">
+                    <option value="all">All Changes</option>
+                    <option value="new">New Books</option>
+                    <option value="edit">Book Edits</option>
+                    <option value="author">Author Updates</option>
+                </select>
+                <select id="timeRange">
+                    <option value="day">Last 24 Hours</option>
+                    <option value="week">Last Week</option>
+                    <option value="month">Last Month</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="recent-content">
+            <div class="new-books">
+                <h2>Recent Additions</h2>
+                <div id="newBooks" class="book-grid"></div>
+            </div>
+
+            <div class="recent-updates">
+                <h2>Recent Updates</h2>
+                <div id="recentChanges" class="changes-list"></div>
+            </div>
+
+            <div id="pagination" class="pagination hidden">
+                <button id="prevPage" disabled>Previous</button>
+                <span id="currentPage">Page 1</span>
+                <button id="nextPage">Next</button>
+            </div>
+        </section>
+
+        <div id="loading" class="loading hidden"></div>
+        
+        <div id="errorMessage" class="error-message hidden">
+            <p>Error loading recent changes. Please try again later.</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Open Library. Powered by Open Library APIs.</p>
+    </footer>
+
+    <script src="../js/script.js"></script>
+    <script src="../js/recent.js"></script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Open Library</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-brand">Open Library</div>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="search.html">Search</a>
+            <a href="subjects.html">Subjects</a>
+            <a href="lists.html">Lists</a>
+            <a href="recent.html">What's New</a>
+            <button id="darkModeToggle">🌓</button>
+        </div>
+    </nav>
+
+    <main class="auth-page">
+        <div class="auth-container">
+            <h1>Create Account</h1>
+            <p class="auth-subtitle">Join Open Library to track your reading and create lists</p>
+
+            <form id="signupForm" class="auth-form">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" required
+                        placeholder="Enter your full name">
+                    <div class="error-message" id="nameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required
+                        placeholder="Enter your email">
+                    <div class="error-message" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-input">
+                        <input type="password" id="password" required
+                            placeholder="Create a password">
+                        <button type="button" id="togglePassword" class="toggle-password">
+                            👁️
+                        </button>
+                    </div>
+                    <div class="error-message" id="passwordError"></div>
+                    <div class="password-requirements">
+                        Password must:
+                        <ul>
+                            <li id="lengthReq">Be at least 8 characters long</li>
+                            <li id="upperReq">Include an uppercase letter</li>
+                            <li id="lowerReq">Include a lowercase letter</li>
+                            <li id="numberReq">Include a number</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="password-input">
+                        <input type="password" id="confirmPassword" required
+                            placeholder="Confirm your password">
+                        <button type="button" id="toggleConfirmPassword" class="toggle-password">
+                            👁️
+                        </button>
+                    </div>
+                    <div class="error-message" id="confirmPasswordError"></div>
+                </div>
+
+                <div class="form-group terms">
+                    <label>
+                        <input type="checkbox" id="terms" required>
+                        I agree to the <a href="#">Terms of Service</a> and 
+                        <a href="#">Privacy Policy</a>
+                    </label>
+                    <div class="error-message" id="termsError"></div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn-primary btn-block">
+                        Create Account
+                    </button>
+                </div>
+
+                <div class="auth-separator">
+                    <span>OR</span>
+                </div>
+
+                <div class="social-auth">
+                    <button type="button" class="btn-secondary btn-block social-btn google">
+                        Continue with Google
+                    </button>
+                    <button type="button" class="btn-secondary btn-block social-btn github">
+                        Continue with GitHub
+                    </button>
+                </div>
+            </form>
+
+            <p class="auth-footer">
+                Already have an account? 
+                <a href="login.html">Sign in</a>
+            </p>
+        </div>
+    </main>
+
+    <div id="loading" class="loading hidden"></div>
+    <div id="errorMessage" class="error-message hidden"></div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Help</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Terms of Use</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Open Library. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/script.js"></script>
+    <script src="../js/signup.js"></script>
+</body>
+</html>

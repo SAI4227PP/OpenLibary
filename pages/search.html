@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Books - Open Library</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-brand">Open Library</div>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="search.html">Search</a>
+            <a href="subjects.html">Subjects</a>
+            <a href="lists.html">Lists</a>
+            <a href="recent.html">What's New</a>
+            <a href="mybooks.html" class="user-only hidden">My Books</a>
+            <a href="login.html" class="guest-only">Login</a>
+            <a href="signup.html" class="guest-only">Sign Up</a>
+            <button id="logoutBtn" class="user-only hidden">Logout</button>
+            <button id="darkModeToggle">🌓</button>
+        </div>
+    </nav>
+
+    <main>
+        <section class="search-section">
+            <h1>Search Books</h1>
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search by title, author, or ISBN">
+                    <button id="searchButton">Search</button>
+                </div>
+                <div class="search-filters">
+                    <select id="searchType">
+                        <option value="all">All</option>
+                        <option value="title">Title</option>
+                        <option value="author">Author</option>
+                        <option value="isbn">ISBN</option>
+                        <option value="subject">Subject</option>
+                    </select>
+                    <label>
+                        <input type="checkbox" id="fullTextSearch">
+                        Full Text Search
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <section class="results-section">
+            <div id="resultsCount" class="hidden">
+                <p>Found <span id="totalResults">0</span> results</p>
+            </div>
+            <div id="searchResults" class="book-grid"></div>
+            <div id="pagination" class="pagination hidden">
+                <button id="prevPage" disabled>Previous</button>
+                <span id="currentPage">Page 1</span>
+                <button id="nextPage">Next</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Open Library. Powered by Open Library APIs.</p>
+    </footer>
+
+    <script src="../js/script.js"></script>
+    <script src="../js/search.js"></script>
+</body>
+</html>
