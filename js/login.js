@@ -5,9 +5,9 @@ const passwordInput = document.getElementById('password');
 const emailError = document.getElementById('emailError');
 const passwordError = document.getElementById('passwordError');
 const togglePasswordBtn = document.getElementById('togglePassword');
-const rememberMeCheckbox = document.getElementById('rememberMe');
 const loading = document.getElementById('loading');
 const errorMessage = document.getElementById('errorMessage');
+const rememberMe = document.getElementById('rememberMe');
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', () => {
@@ -18,11 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Restore saved email if remember me was checked
-    const savedEmail = localStorage.getItem('savedEmail');
-    if (savedEmail) {
-        emailInput.value = savedEmail;
-        rememberMeCheckbox.checked = true;
+    // Check for remembered email
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    if (rememberedEmail) {
+        emailInput.value = rememberedEmail;
+        rememberMe.checked = true;
     }
 });
 
@@ -46,26 +46,28 @@ loginForm.addEventListener('submit', async (e) => {
         await new Promise(resolve => setTimeout(resolve, 1000));
 
         // Get form data
-        const email = emailInput.value.trim();
-        const password = passwordInput.value;
+        const formData = {
+            email: emailInput.value.trim(),
+            password: passwordInput.value
+        };
         
-        // Simulate authentication
-        const user = await authenticateUser(email, password);
+        // Simulate login
+        const user = await loginUser(formData);
         
         if (user) {
             // Handle remember me
-            if (rememberMeCheckbox.checked) {
-                localStorage.setItem('savedEmail', email);
+            if (rememberMe.checked) {
+                localStorage.setItem('rememberedEmail', user.email);
             } else {
-                localStorage.removeItem('savedEmail');
+                localStorage.removeItem('rememberedEmail');
             }
 
             // Save user session
             localStorage.setItem('user', JSON.stringify(user));
 
-            // Redirect to homepage or previous page
-            const redirectUrl = new URLSearchParams(window.location.search).get('redirect');
-            window.location.href = redirectUrl || '../index.html';
+            // Redirect to previous page or home
+            const redirect = new URLSearchParams(window.location.search).get('redirect');
+            window.location.href = redirect || '../index.html';
         } else {
             showError('Invalid email or password');
         }
@@ -97,9 +99,6 @@ function validateForm() {
     if (!password) {
         showInputError(passwordError, 'Password is required');
         isValid = false;
-    } else if (password.length < 6) {
-        showInputError(passwordError, 'Password must be at least 6 characters');
-        isValid = false;
     }
 
     return isValid;
@@ -119,11 +118,11 @@ function showInputError(element, message) {
 
 // Reset form errors
 function resetErrors() {
-    emailError.textContent = '';
-    passwordError.textContent = '';
+    [emailError, passwordError].forEach(error => {
+        error.textContent = '';
+        error.parentElement.classList.remove('has-error');
+    });
     errorMessage.classList.add('hidden');
-    emailError.parentElement.classList.remove('has-error');
-    passwordError.parentElement.classList.remove('has-error');
 }
 
 // Show/hide password
@@ -133,22 +132,22 @@ togglePasswordBtn.addEventListener('click', () => {
     togglePasswordBtn.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
 });
 
-// Authentication simulation
-async function authenticateUser(email, password) {
+// User login simulation
+async function loginUser(credentials) {
     // In a real app, this would be an API call
-    const mockUsers = [
-        {
-            email: 'test@example.com',
-            password: 'password123',
-            name: 'Test User'
-        }
-    ];
+    // For demo purposes, just check against mock user
+    const mockUser = {
+        email: 'test@example.com',
+        password: 'Test123!', // In real app, this would be hashed
+        name: 'Test User'
+    };
 
-    const user = mockUsers.find(u => u.email === email && u.password === password);
-    if (user) {
-        const { password, ...userWithoutPassword } = user;
-        return userWithoutPassword;
+    if (credentials.email === mockUser.email && credentials.password === mockUser.password) {
+        // Return user object without password
+        const { password, ...user } = mockUser;
+        return user;
     }
+
     return null;
 }
 
@@ -169,25 +168,25 @@ function showError(message) {
     errorMessage.classList.remove('hidden');
 }
 
-// Social authentication handlers
+// Social login handlers
 document.querySelector('.social-btn.google').addEventListener('click', () => {
     // In a real app, this would initiate Google OAuth flow
-    alert('Google authentication would be implemented here');
+    alert('Google login would be implemented here');
 });
 
 document.querySelector('.social-btn.github').addEventListener('click', () => {
     // In a real app, this would initiate GitHub OAuth flow
-    alert('GitHub authentication would be implemented here');
+    alert('GitHub login would be implemented here');
+});
+
+// Forgot password handler
+document.querySelector('.forgot-password').addEventListener('click', (e) => {
+    e.preventDefault();
+    // In a real app, this would open a forgot password flow
+    alert('Password reset functionality would be implemented here');
 });
 
 // Navigation
 function redirectToHome() {
     window.location.href = '../index.html';
 }
-
-// Handle forgot password
-document.querySelector('.forgot-password').addEventListener('click', (e) => {
-    e.preventDefault();
-    // In a real app, this would open a forgot password flow
-    alert('Forgot password functionality would be implemented here');
-});
