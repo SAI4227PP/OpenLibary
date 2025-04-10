@@ -2,11 +2,8 @@
 const loginForm = document.getElementById('loginForm');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
-const emailError = document.getElementById('emailError');
-const passwordError = document.getElementById('passwordError');
 const togglePasswordBtn = document.getElementById('togglePassword');
 const loading = document.getElementById('loading');
-const errorMessage = document.getElementById('errorMessage');
 const rememberMe = document.getElementById('rememberMe');
 
 // Initialize page
@@ -30,14 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    // Reset errors
-    resetErrors();
-    
-    // Validate form
-    if (!validateForm()) {
-        return;
-    }
-
     // Show loading state
     showLoading();
 
@@ -68,62 +57,14 @@ loginForm.addEventListener('submit', async (e) => {
             // Redirect to previous page or home
             const redirect = new URLSearchParams(window.location.search).get('redirect');
             window.location.href = redirect || '../index.html';
-        } else {
-            showError('Invalid email or password');
         }
 
     } catch (error) {
         console.error('Login error:', error);
-        showError('An error occurred. Please try again.');
     } finally {
         hideLoading();
     }
 });
-
-// Form validation
-function validateForm() {
-    let isValid = true;
-
-    // Validate email
-    const email = emailInput.value.trim();
-    if (!email) {
-        showInputError(emailError, 'Email is required');
-        isValid = false;
-    } else if (!isValidEmail(email)) {
-        showInputError(emailError, 'Please enter a valid email address');
-        isValid = false;
-    }
-
-    // Validate password
-    const password = passwordInput.value;
-    if (!password) {
-        showInputError(passwordError, 'Password is required');
-        isValid = false;
-    }
-
-    return isValid;
-}
-
-// Email validation
-function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
-
-// Show input error
-function showInputError(element, message) {
-    element.textContent = message;
-    element.parentElement.classList.add('has-error');
-}
-
-// Reset form errors
-function resetErrors() {
-    [emailError, passwordError].forEach(error => {
-        error.textContent = '';
-        error.parentElement.classList.remove('has-error');
-    });
-    errorMessage.classList.add('hidden');
-}
 
 // Show/hide password
 togglePasswordBtn.addEventListener('click', () => {
@@ -134,16 +75,13 @@ togglePasswordBtn.addEventListener('click', () => {
 
 // User login simulation
 async function loginUser(credentials) {
-    // In a real app, this would be an API call
-    // For demo purposes, just check against mock user
     const mockUser = {
         email: 'test@example.com',
-        password: 'Test123!', // In real app, this would be hashed
+        password: 'Test123!',
         name: 'Test User'
     };
 
     if (credentials.email === mockUser.email && credentials.password === mockUser.password) {
-        // Return user object without password
         const { password, ...user } = mockUser;
         return user;
     }
@@ -153,38 +91,21 @@ async function loginUser(credentials) {
 
 // Loading state
 function showLoading() {
+    const scrollY = window.scrollY;
+    document.body.style.top = `-${scrollY}px`;
+    document.body.classList.add('loading-active');
     loading.classList.remove('hidden');
     loginForm.querySelector('button[type="submit"]').disabled = true;
 }
 
 function hideLoading() {
     loading.classList.add('hidden');
+    document.body.classList.remove('loading-active');
+    const scrollY = document.body.style.top;
+    document.body.style.top = '';
+    window.scrollTo(0, parseInt(scrollY || '0') * -1);
     loginForm.querySelector('button[type="submit"]').disabled = false;
 }
-
-// Error handling
-function showError(message) {
-    errorMessage.textContent = message;
-    errorMessage.classList.remove('hidden');
-}
-
-// Social login handlers
-document.querySelector('.social-btn.google').addEventListener('click', () => {
-    // In a real app, this would initiate Google OAuth flow
-    alert('Google login would be implemented here');
-});
-
-document.querySelector('.social-btn.github').addEventListener('click', () => {
-    // In a real app, this would initiate GitHub OAuth flow
-    alert('GitHub login would be implemented here');
-});
-
-// Forgot password handler
-document.querySelector('.forgot-password').addEventListener('click', (e) => {
-    e.preventDefault();
-    // In a real app, this would open a forgot password flow
-    alert('Password reset functionality would be implemented here');
-});
 
 // Navigation
 function redirectToHome() {

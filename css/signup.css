@@ -16,34 +16,34 @@
     max-width: 500px;
 }
 
-/* Form styling inherits from login.css but adds new elements */
-.password-strength {
-    height: 4px;
-    background: var(--border-color);
-    margin-top: var(--spacing-xs);
-    border-radius: var(--border-radius-sm);
-}
-
-.password-strength-indicator {
-    height: 100%;
-    width: 0;
-    border-radius: var(--border-radius-sm);
-    transition: width var(--transition-normal), background-color var(--transition-normal);
-}
-
-.password-strength-weak { width: 33%; background-color: #dc3545; }
-.password-strength-medium { width: 66%; background-color: #ffc107; }
-.password-strength-strong { width: 100%; background-color: #28a745; }
-
 .terms-checkbox {
     display: flex;
     align-items: flex-start;
     gap: var(--spacing-sm);
     margin: var(--spacing-md) 0;
+    flex-direction: row;
+    justify-content: flex-start;
 }
 
 .terms-checkbox input[type="checkbox"] {
     margin-top: 0.3em;
+    margin-right: var(--spacing-sm);
+    order: -1;
+}
+
+.terms label {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    white-space: nowrap;
+}
+
+.terms label span {
+    white-space: nowrap;
+}
+
+.terms input[type="checkbox"] {
+    margin-top: 0.25em;
 }
 
 .form-grid {
@@ -55,10 +55,6 @@
 /* Dark mode adjustments */
 .dark-mode .signup-form {
     background: var(--surface-color);
-}
-
-.dark-mode .password-strength {
-    background: var(--border-color);
 }
 
 /* Responsive adjustments */

@@ -20,7 +20,6 @@
                     <label for="email">Email address</label>
                     <input type="email" id="email" required
                         placeholder="you@example.com">
-                    <div class="error-message" id="emailError"></div>
                 </div>
 
                 <div class="form-group">
@@ -32,7 +31,6 @@
                             👁️
                         </button>
                     </div>
-                    <div class="error-message" id="passwordError"></div>
                 </div>
 
                 <div class="remember-me">
@@ -46,21 +44,6 @@
                 <button type="submit" class="btn-primary">
                     Sign in to your account
                 </button>
-
-                <div class="auth-separator">
-                    <span>or continue with</span>
-                </div>
-
-                <div class="social-auth">
-                    <button type="button" class="social-btn google">
-                        <img src="../assets/google-icon.svg" alt="Google" width="20">
-                        Sign in with Google
-                    </button>
-                    <button type="button" class="social-btn github">
-                        <img src="../assets/github-icon.svg" alt="GitHub" width="20">
-                        Sign in with GitHub
-                    </button>
-                </div>
             </form>
 
             <p class="auth-footer">
@@ -72,7 +55,6 @@
         <div id="loading" class="loading hidden">
             <div class="loading-spinner"></div>
         </div>
-        <div id="errorMessage" class="error-message hidden"></div>
     </main>
 
     <footer>
