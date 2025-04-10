@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem var(--spacing-xl);
+    padding: 1rem 0;
     background: var(--surface-color);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: sticky;
@@ -110,7 +110,7 @@
     justify-content: center;
     text-align: center;
     color: white;
-    padding: clamp(var(--spacing-md), 5vw, var(--spacing-xl));
+    padding: clamp(var(--spacing-md), 5vw, var(--spacing-xl)) 0;
 }
 
 .hero__content {
@@ -229,10 +229,15 @@
     .carousel-container .book-card {
         flex: 0 0 160px;
         min-width: 160px;
+        height: 180px; /* Reduced from 220px */
     }
     
     .featured-wrapper {
         padding: 0 32px; /* Adjust padding for smaller buttons on mobile */
+    }
+
+    .book-cover img {
+        height: 120px; /* Reduced from 140px */
     }
 }
 
@@ -400,11 +405,12 @@
     }
 
     .book-card {
-        flex: 0 0 200px;
+        flex: 0 0 160px;
+        height: 80px; /* Reduced from 220px */
     }
     
     .book-cover img {
-        height: 260px;
+        height: 120px; /* Reduced from 140px */
     }
 
     .carousel-container {
@@ -414,6 +420,7 @@
     .carousel-container .book-card {
         flex: 0 0 160px;
         min-width: 160px;
+        height: 180px; /* Reduced from 220px */
     }
 }
 
@@ -430,6 +437,7 @@
 
     .book-card {
         padding: var(--spacing-sm);
+        height: 50px; /* Reduced from 60px */
     }
 
     .book-title {
@@ -450,57 +458,15 @@
 
 /* Content Sections */
 .home-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: clamp(var(--spacing-md), 5vw, var(--spacing-xl));
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: var(--spacing-xl) 0;
 }
 
 .section-header {
     margin-bottom: var(--spacing-xl);
 }
-
-/* Featured Books */
-.featured-books {
-    position: relative;
-    margin-bottom: var(--spacing-xl);
-}
-
-.carousel-container {
-    display: flex;
-    overflow-x: auto;
-    gap: var(--spacing-md);
-    padding: var(--spacing-md);
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-}
-
-.carousel-container::-webkit-scrollbar {
-    display: none; /* Chrome, Safari and Opera */
-}
-
-.carousel-container .book-card {
-    flex: 0 0 200px;
-    max-width: 200px;
-}
-
-.carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 1;
-}
-
-.carousel-btn:disabled { opacity: 0.5; cursor: default; }
 
 /* Trending Subjects */
 .subject-grid {
@@ -634,6 +600,7 @@
     .carousel-container .book-card {
         flex: 0 0 160px;
         min-width: 160px;
+        height: 180px; /* Reduced from 220px */
     }
 }
 

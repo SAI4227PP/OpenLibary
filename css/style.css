@@ -125,6 +125,12 @@
     color: var(--primary-color);
 }
 
+.main-content {
+    width: 100%;
+    margin: 0;
+    padding: var(--spacing-md) 0;
+}
+
 .main-footer {
     background: var(--surface-color);
     padding: var(--spacing-xl) 0;

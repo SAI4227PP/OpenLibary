@@ -1,7 +1,7 @@
 .mybooks-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: var(--spacing-xl);
+    padding: var(--spacing-xl) 0;
 }
 
 .reading-stats {
