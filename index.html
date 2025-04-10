@@ -42,7 +42,9 @@
                 <h2>Featured Books</h2>
                 <a href="pages/recent.html" class="view-all">View All</a>
             </div>
-            <div class="featured-grid" id="featuredBooks">
+            <div class="featured-wrapper">
+                <button class="carousel-btn prev" onclick="scrollCarousel(-1)" disabled>←</button>
+                <button class="carousel-btn next" onclick="scrollCarousel(1)">→</button>
                 <div class="loading-state">
                     <div class="loading-spinner"></div>
                 </div>
@@ -173,17 +175,14 @@
             const loadingState = document.querySelector('.loading-state');
             
             try {
-                // Show loading state
                 loadingState.style.display = 'flex';
                 container.style.display = 'none';
                 
-                // Use the search API to get featured books from different categories
                 const subjects = ['fiction', 'science', 'philosophy', 'history', 'fantasy'];
                 const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
                 const response = await window.libraryUtils.searchBooks(`subject:${randomSubject}`, 1);
-                const books = response.docs.slice(0, 12); // Take first 12 books for more variety
+                const books = response.docs.slice(0, 12);
                 
-                // Create book cards using libraryUtils
                 const bookCards = books.map(book => {
                     const card = window.libraryUtils.createBookCard(book);
                     return card.outerHTML;
@@ -191,9 +190,11 @@
                 
                 container.innerHTML = bookCards;
                 
-                // Hide loading state and show content
                 loadingState.style.display = 'none';
-                container.style.display = 'grid';
+                container.style.display = 'flex'; // Changed from 'grid' to 'flex'
+                
+                // Initialize button states
+                updateCarouselButtons();
                 
             } catch (error) {
                 console.error('Error loading featured books:', error);

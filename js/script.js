@@ -114,6 +114,39 @@ function toggleDarkMode() {
     localStorage.setItem('darkMode', isDarkMode);
 }
 
+// Carousel Navigation
+function scrollCarousel(direction) {
+    const container = document.querySelector('.carousel-container');
+    const cardWidth = 200; // Width of each book card
+    const scrollAmount = cardWidth + 16; // Card width + gap
+    
+    if (container) {
+        const newScrollPosition = container.scrollLeft + (direction * scrollAmount);
+        container.scrollTo({
+            left: newScrollPosition,
+            behavior: 'smooth'
+        });
+        
+        // Update button states after scrolling
+        updateCarouselButtons();
+    }
+}
+
+function updateCarouselButtons() {
+    const container = document.querySelector('.carousel-container');
+    const prevButton = document.querySelector('.carousel-btn.prev');
+    const nextButton = document.querySelector('.carousel-btn.next');
+    
+    if (container && prevButton && nextButton) {
+        // Check if we can scroll backwards
+        prevButton.disabled = container.scrollLeft <= 0;
+        
+        // Check if we can scroll forwards
+        const maxScroll = container.scrollWidth - container.clientWidth - 1; // -1 for rounding
+        nextButton.disabled = container.scrollLeft >= maxScroll;
+    }
+}
+
 // Homepage functions
 async function loadFeaturedBooks() {
     try {
@@ -122,27 +155,26 @@ async function loadFeaturedBooks() {
         
         if (!container) return;
         
-        // Show loading state
         loadingState.style.display = 'flex';
         container.style.display = 'none';
-
-        // Get books from different categories
+        
         const subjects = ['fiction', 'science', 'philosophy', 'history', 'fantasy'];
         const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
         const response = await window.libraryUtils.searchBooks(`subject:${randomSubject}`, 1);
-        const books = response.docs.slice(0, 12); // Get 12 books for the carousel
-
-        // Create and append book cards
+        const books = response.docs.slice(0, 12);
+        
         const bookCards = books.map(book => {
             const card = window.libraryUtils.createBookCard(book);
             return card.outerHTML;
         }).join('');
-
+        
         container.innerHTML = bookCards;
         
-        // Hide loading state and show content
         loadingState.style.display = 'none';
-        container.style.display = 'grid';
+        container.style.display = 'flex'; // Ensure flex display
+        
+        // Initialize button states
+        updateCarouselButtons();
         
     } catch (error) {
         console.error('Error loading featured books:', error);
@@ -371,4 +403,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (hamburger) hamburger.classList.remove('active');
         }
     });
+
+    // Add scroll event listener to update button states
+    const container = document.querySelector('.carousel-container');
+    if (container) {
+        container.addEventListener('scroll', updateCarouselButtons);
+        // Initial button state
+        updateCarouselButtons();
+    }
 });
