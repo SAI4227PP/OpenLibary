@@ -43,14 +43,10 @@
                 <a href="pages/recent.html" class="view-all">View All</a>
             </div>
             <div class="featured-grid" id="featuredBooks">
-                <button class="carousel-btn prev" disabled>❮</button>
-                <div class="carousel-container">
-                    <div class="loading-state">
-                        <div class="loading-spinner"></div>
-                    </div>
-                    <div class="carousel-content"></div>
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
                 </div>
-                <button class="carousel-btn next">❯</button>
+                <div class="carousel-container"></div>
             </div>
         </section>
 
@@ -172,25 +168,8 @@
             }
         });
 
-        // Featured books carousel navigation
-        const carouselContainer = document.querySelector('.carousel-container');
-        const prevBtn = document.querySelector('.carousel-btn.prev');
-        const nextBtn = document.querySelector('.carousel-btn.next');
-        let currentSlide = 0;
-
-        prevBtn.addEventListener('click', () => {
-            currentSlide = Math.max(currentSlide - 1, 0);
-            updateCarousel();
-        });
-
-        nextBtn.addEventListener('click', () => {
-            const maxSlide = Math.ceil(featuredBooks.length / 4) - 1;
-            currentSlide = Math.min(currentSlide + 1, maxSlide);
-            updateCarousel();
-        });
-
         async function loadFeaturedBooks() {
-            const container = document.querySelector('.carousel-content');
+            const container = document.querySelector('.carousel-container');
             const loadingState = document.querySelector('.loading-state');
             
             try {
@@ -198,9 +177,11 @@
                 loadingState.style.display = 'flex';
                 container.style.display = 'none';
                 
-                // Use the search API to get featured books
-                const response = await window.libraryUtils.searchBooks('subject:popular', 1);
-                const books = response.docs.slice(0, 8); // Take first 8 books
+                // Use the search API to get featured books from different categories
+                const subjects = ['fiction', 'science', 'philosophy', 'history', 'fantasy'];
+                const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
+                const response = await window.libraryUtils.searchBooks(`subject:${randomSubject}`, 1);
+                const books = response.docs.slice(0, 12); // Take first 12 books for more variety
                 
                 // Create book cards using libraryUtils
                 const bookCards = books.map(book => {
@@ -212,32 +193,13 @@
                 
                 // Hide loading state and show content
                 loadingState.style.display = 'none';
-                container.style.display = 'flex';
+                container.style.display = 'grid';
                 
-                // Initialize carousel
-                updateCarousel();
             } catch (error) {
                 console.error('Error loading featured books:', error);
                 loadingState.innerHTML = '<p>Error loading books. Please try again later.</p>';
             }
         }
-
-        function updateCarousel() {
-            const container = document.querySelector('.carousel-content');
-            container.style.transform = `translateX(-${currentSlide * 240}px)`;
-            
-            // Update button states
-            prevBtn.disabled = currentSlide === 0;
-            const maxSlide = Math.ceil(container.children.length / 4) - 1;
-            nextBtn.disabled = currentSlide >= maxSlide;
-        }
-
-        // Responsive carousel
-        window.addEventListener('resize', () => {
-            currentSlide = 0;
-            updateCarousel();
-        });
     </script>
 </body>
 </html>
-``` 

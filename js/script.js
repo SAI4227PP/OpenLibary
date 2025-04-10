@@ -117,7 +117,7 @@ function toggleDarkMode() {
 // Homepage functions
 async function loadFeaturedBooks() {
     try {
-        const container = document.querySelector('.carousel-content');
+        const container = document.querySelector('.carousel-container');
         const loadingState = document.querySelector('.loading-state');
         
         if (!container) return;
@@ -126,14 +126,15 @@ async function loadFeaturedBooks() {
         loadingState.style.display = 'flex';
         container.style.display = 'none';
 
-        // Get popular books
-        const response = await window.libraryUtils.searchBooks('subject:fiction', 1);
+        // Get books from different categories
+        const subjects = ['fiction', 'science', 'philosophy', 'history', 'fantasy'];
+        const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
+        const response = await window.libraryUtils.searchBooks(`subject:${randomSubject}`, 1);
         const books = response.docs.slice(0, 12); // Get 12 books for the carousel
 
         // Create and append book cards
         const bookCards = books.map(book => {
             const card = window.libraryUtils.createBookCard(book);
-            card.style.flex = '0 0 250px'; // Set fixed width for carousel items
             return card.outerHTML;
         }).join('');
 
@@ -141,32 +142,12 @@ async function loadFeaturedBooks() {
         
         // Hide loading state and show content
         loadingState.style.display = 'none';
-        container.style.display = 'flex';
-        
-        // Initialize carousel
-        updateCarousel();
-        
-        // Enable/disable buttons based on content
-        const maxSlide = Math.ceil(books.length / 4) - 1;
-        document.querySelector('.carousel-btn.next').disabled = maxSlide <= 0;
+        container.style.display = 'grid';
         
     } catch (error) {
         console.error('Error loading featured books:', error);
         loadingState.innerHTML = '<p>Error loading books. Please try again later.</p>';
     }
-}
-
-function updateCarousel() {
-    const container = document.querySelector('.carousel-content');
-    const carouselWidth = container.parentElement.offsetWidth;
-    const slideWidth = Math.min(carouselWidth, 1000); // Maximum width of 1000px
-    
-    container.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
-    
-    // Update button states
-    const maxSlide = Math.ceil(container.children.length / 4) - 1;
-    document.querySelector('.carousel-btn.prev').disabled = currentSlide === 0;
-    document.querySelector('.carousel-btn.next').disabled = currentSlide >= maxSlide;
 }
 
 async function loadTrendingSubjects() {

@@ -188,25 +188,16 @@
 .featured-books {
     position: relative;
     margin-bottom: var(--spacing-xl);
-    min-height: 300px;
 }
 
 .carousel-container {
-    overflow: hidden;
-    position: relative;
-    margin: 0 clamp(20px, 5vw, 40px);
-    padding: var(--spacing-md) 0;
-}
-
-.carousel-content {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: var(--spacing-md);
-    transition: transform 0.3s ease;
+    padding: var(--spacing-md);
 }
 
 .book-card {
-    flex: 0 0 clamp(160px, calc(100vw - 80px), 250px);
-    min-width: 0;
     background: var(--surface-color);
     border-radius: var(--border-radius-md);
     padding: var(--spacing-md);
@@ -378,6 +369,10 @@
     .book-cover img {
         height: 260px;
     }
+
+    .carousel-container {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
 }
 
 /* Additional responsive improvements */
@@ -429,9 +424,10 @@
 }
 
 .carousel-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: var(--spacing-md);
-    transition: transform 0.3s ease;
+    padding: var(--spacing-md);
 }
 
 .carousel-btn {
