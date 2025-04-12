@@ -83,15 +83,21 @@ function loadUserLists() {
     }
 
     const listsHTML = lists.map(list => `
-        <div class="list-card" data-list-id="${list.id}">
-            <h3>${list.name}</h3>
-            <p>${list.description}</p>
-            <span class="book-count">${list.books.length} books</span>
-            <div class="list-actions">
-                <button onclick="viewList('${list.id}')" class="btn-secondary">View</button>
-                <button onclick="deleteList('${list.id}')" class="btn-danger">Delete</button>
+        <div class="list-card">
+            <div class="list-content">
+                <h3 class="list-title">${list.name}</h3>
+                <p class="list-description">${list.description}</p>
+                <div class="list-meta">
+                    <div class="book-count">${list.books.length} books</div>
+                    <div class="created-by">Created by ${user.email}</div>
+                    <div class="last-updated">Updated ${new Date(list.created).toLocaleDateString()}</div>
+                    ${list.private ? '<div class="private-badge">Private</div>' : ''}
+                    <div class="list-actions">
+                        <button onclick="viewList('${list.id}')" class="btn-secondary">View</button>
+                        <button onclick="deleteList('${list.id}')" class="btn-danger">Delete</button>
+                    </div>
+                </div>
             </div>
-            ${list.private ? '<span class="private-badge">Private</span>' : ''}
         </div>
     `).join('');
 
