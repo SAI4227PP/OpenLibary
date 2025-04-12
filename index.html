@@ -40,7 +40,7 @@
         <section class="featured-books">
             <div class="section-header">
                 <h2>Featured Books</h2>
-                <a href="pages/recent.html" class="view-all">View All</a>
+                <a href="pages/featured.html" class="view-all">View All</a>
             </div>
             <div class="featured-wrapper">
                 <button class="carousel-btn prev" onclick="scrollCarousel(-1)" disabled>←</button>
@@ -49,6 +49,19 @@
                     <div class="loading-spinner"></div>
                 </div>
                 <div class="carousel-container"></div>
+                <!-- Add book card template -->
+                <template id="book-card-template">
+                    <div class="book-card">
+                        <div class="book-cover">
+                            <img src="" alt="Book cover">
+                        </div>
+                        <div class="book-info">
+                            <h3 class="book-title"></h3>
+                            <p class="book-author"></p>
+                            <span class="book-year"></span>
+                        </div>
+                    </div>
+                </template>
             </div>
         </section>
 
@@ -68,7 +81,25 @@
                 <a href="pages/lists.html" class="view-all">View All</a>
             </div>
             <div class="lists-grid" id="popularLists">
-                <!-- Lists will be dynamically added here -->
+                <template id="list-card-template">
+                    <div class="list-card">
+                        <div class="list-content">
+                            <h3 class="list-title"></h3>
+                            <p class="list-description"></p>
+                            <div class="list-meta">
+                                <div class="book-count">
+                                    <span class="count"></span> books
+                                </div>
+                                <div class="created-by">
+                                    Created by <span class="author"></span>
+                                </div>
+                                <div class="last-updated">
+                                    Updated <span class="date"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
             </div>
         </section>
 

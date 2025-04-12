@@ -1,0 +1,230 @@
+.featured-page {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.page-header p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.featured-grid {
+    position: relative;
+    min-height: 400px;
+    padding: 0;
+}
+
+/* Match index page book card styles */
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) 0;
+    margin: 0;
+}
+
+.book-card {
+    width: 100%;
+    height: 280px;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-color);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    transition: transform 0.2s;
+    padding: var(--spacing-xs);
+}
+
+.book-card:hover {
+    transform: translateY(-4px);
+}
+
+.book-cover {
+    height: 200px;
+    margin-bottom: var(--spacing-xs);
+}
+
+.book-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--border-radius-sm);
+}
+
+.book-info {
+    padding: var(--spacing-xs);
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex: 1;
+    min-height: 0;
+}
+
+.book-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.1;
+    margin-bottom: 2px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.book-author {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 2px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.book-year {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: auto;
+    display: block;
+}
+
+.book-date {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    display: block;
+    margin-top: 2px;
+}
+
+.loading-state {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.pagination button {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    background: var(--background-color);
+    cursor: pointer;
+    border-radius: var(--border-radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.pagination button:hover {
+    background: var(--surface-color);
+}
+
+.pagination button.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .books-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .books-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .books-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+    }
+
+    .book-card {
+        height: 220px;
+    }
+
+    .book-cover {
+        height: 150px;
+    }
+
+    .book-info {
+        padding: 4px;
+        min-height: 80px;
+        gap: 2px;
+    }
+
+    .book-title {
+        font-size: 0.82rem;
+        line-height: 1.2;
+        -webkit-line-clamp: 2;
+    }
+
+    .book-author {
+        font-size: 0.75rem;
+        -webkit-line-clamp: 1;
+    }
+
+    .book-year {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .books-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .books-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.3rem;
+    }
+
+    .book-card {
+        height: 200px;  /* Increased height */
+    }
+
+    .book-cover {
+        height: 120px;
+    }
+
+    .book-info {
+        padding: 3px;
+        min-height: 80px;
+        gap: 2px;
+    }
+
+    .book-title {
+        font-size: 0.8rem;
+        line-height: 1.2;
+        margin-bottom: 2px;
+    }
+
+    .book-author {
+        font-size: 0.72rem;
+        margin-bottom: 1px;
+    }
+}
