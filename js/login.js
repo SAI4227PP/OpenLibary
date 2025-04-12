@@ -8,9 +8,9 @@ const rememberMe = document.getElementById('rememberMe');
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', () => {
-    // Check if user is already logged in
+    // Check if user is already logged in and came from another page
     const user = checkAuth();
-    if (user) {
+    if (user && document.referrer) {
         redirectToHome();
         return;
     }

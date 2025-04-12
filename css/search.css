@@ -1,12 +1,12 @@
 /* Root Theme Variables */
 :root {
-    --primary-color: #8B4513;
-    --secondary-color: #D2B48C;
-    --background-color: #FFF8F0;
+    --primary-color: #000000;
+    --secondary-color: #666666;
+    --background-color: #FFFFFF;
     --surface-color: #FFFFFF;
-    --text-color: #3E3E3E;
-    --text-secondary: #7D7D7D;
-    --border-color: #C8AD7F;
+    --text-color: #000000;
+    --text-secondary: #666666;
+    --border-color: #CCCCCC;
 
     --spacing-xs: 4px;
     --spacing-sm: 8px;
@@ -19,8 +19,12 @@
     --border-radius-lg: 12px;
 
     --transition-fast: 0.3s ease;
+
+    --card-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    --hover-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
 
+/* Search Page Styles */
 /* Layout Fix for Sticky Footer */
 html, body {
     height: 100%;
@@ -31,8 +35,8 @@ html, body {
 
 /* Body Styling */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(to bottom right, #FFF8F0, #D2B48C);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--background-color);
     color: var(--text-color);
 }
 
@@ -88,14 +92,12 @@ nav a:hover::after {
     flex-wrap: wrap;
     max-width: 800px;
     margin: 0 auto;
-    /* background: rgba(255, 255, 255, 0.4); */
-    background: rgba(210, 180, 140, 0.4);
-
+    background: var(--surface-color);
     backdrop-filter: blur(8px);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-lg);
     padding: var(--spacing-md);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--card-shadow);
 }
 
 #searchInput {
@@ -107,31 +109,31 @@ nav a:hover::after {
     max-width: 400px;
     transition: border-color 0.3s, box-shadow 0.3s;
     outline: none;
+    background: var(--background-color);
+    color: var(--text-color);
 }
 
 #searchInput:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.2);
+    box-shadow: var(--hover-shadow);
 }
 
 #searchButton {
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, #8B4513, #D2B48C);
+    background: var(--primary-color);
     color: white;
     font-weight: 600;
     font-size: 1rem;
     border: none;
     border-radius: var(--border-radius-md);
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
+    transition: all var(--transition-fast);
+    box-shadow: var(--card-shadow);
 }
 
 #searchButton:hover {
-    /* background: linear-gradient(135deg, #A0522D, #E0C3A6); */
-    background: linear-gradient(135deg, #8B3E1D, #C9A77D);
-
-    box-shadow: 0 6px 18px rgba(139, 69, 19, 0.3);
+    background: var(--secondary-color);
+    box-shadow: var(--hover-shadow);
 }
 
 /* Ripple + Bounce Animation */
@@ -146,24 +148,12 @@ nav a:hover::after {
     animation: button-press 0.2s ease;
 }
 
-/* .search-filters {
-    display: flex;
-    justify-content: center;
-    gap: var(--spacing-md);
-    flex-wrap: wrap;
-    margin-top: var(--spacing-sm);
-}
-
-.search-filters select,
-.search-filters label {
-    font-size: 0.95rem;
-} */
 .search-filters {
     display: flex;
     justify-content: center;
     gap: var(--spacing-md);
     flex-wrap: wrap;
-    margin-top: var(--spacing-lg); /* Adds spacing below search box */
+    margin-top: var(--spacing-lg);
 }
 
 .search-filters select {
@@ -174,13 +164,13 @@ nav a:hover::after {
     background-color: var(--surface-color);
     color: var(--text-color);
     transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--card-shadow);
     cursor: pointer;
     appearance: none;
 
     /* Custom arrow */
-    background-image: linear-gradient(45deg, transparent 50%, var(--primary-color) 50%),
-                      linear-gradient(135deg, var(--primary-color) 50%, transparent 50%);
+    background-image: linear-gradient(45deg, transparent 50%, var(--text-color) 50%),
+                      linear-gradient(135deg, var(--text-color) 50%, transparent 50%);
     background-position: calc(100% - 1rem) center;
     background-size: 10px 10px;
     background-repeat: no-repeat;
@@ -189,13 +179,13 @@ nav a:hover::after {
 
 .search-filters select:hover {
     border-color: var(--primary-color);
-    background-color: #fffaf3;
+    background-color: var(--surface-color);
 }
 
 .search-filters select:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.2);
+    box-shadow: var(--hover-shadow);
 }
 
 /* Results Section */
@@ -214,13 +204,13 @@ nav a:hover::after {
     background: var(--surface-color);
     border-radius: var(--border-radius-md);
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--card-shadow);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .result-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--hover-shadow);
 }
 
 .result-image {
@@ -237,7 +227,7 @@ nav a:hover::after {
 .result-title {
     font-size: 1.1rem;
     font-weight: 600;
-    color: var(--primary-color);
+    color: var(--text-color);
     margin-bottom: var(--spacing-xs);
 }
 
@@ -258,27 +248,27 @@ nav a:hover::after {
 /* Stylish Pagination Buttons */
 .pagination button {
     padding: 0.6rem 1.5rem;
-    background: linear-gradient(135deg, #D2B48C, #C8AD7F);
+    background: var(--primary-color);
     border: none;
     border-radius: var(--border-radius-md);
-    color: #fff;
+    color: white;
     font-weight: 600;
     font-size: 0.95rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition-fast);
+    box-shadow: var(--card-shadow);
     position: relative;
     overflow: hidden;
 }
 
 .pagination button:hover:not(:disabled) {
-    background: linear-gradient(135deg, #8B4513, #D2B48C);
+    background: var(--secondary-color);
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--hover-shadow);
 }
 
 .pagination button:disabled {
-    background: #ccc;
+    background: var(--text-secondary);
     cursor: not-allowed;
     box-shadow: none;
 }
@@ -291,6 +281,25 @@ footer {
     font-size: 0.9rem;
     padding: var(--spacing-md);
     width: 100%;
+}
+
+/* Dark mode adjustments */
+.dark-mode .search-box {
+    background: var(--surface-color);
+}
+
+.dark-mode #searchInput {
+    background: var(--background-color);
+    color: var(--text-color);
+}
+
+.dark-mode .search-filters select {
+    background-color: var(--surface-color);
+    color: var(--text-color);
+}
+
+.dark-mode .result-card {
+    background: var(--surface-color);
 }
 
 /* Responsive */
@@ -313,34 +322,4 @@ footer {
     .book-grid {
         grid-template-columns: 1fr;
     }
-}    
-
-#nextPage {
-    padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, #8B4513, #D2B48C);
-    color: white;
-    font-weight: 600;
-    font-size: 1rem;
-    border: none;
-    border-radius: 8px; /* Same as var(--border-radius-md) */
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
-}
-
-#nextPage:hover {
-    /* background: linear-gradient(135deg, #A0522D, #E0C3A6); */
-    background: linear-gradient(135deg, #8B3E1D, #C9A77D);
-
-    box-shadow: 0 6px 18px rgba(139, 69, 19, 0.3);
-}
-
-#nextPage:active {
-    animation: button-press 0.2s ease;
-}
-
-@keyframes button-press {
-    0% { transform: scale(1); }
-    50% { transform: scale(0.96); }
-    100% { transform: scale(1); }
 }
