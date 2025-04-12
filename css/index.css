@@ -220,14 +220,21 @@
     display: none;
 }
 
-.carousel-container .book-card {
+/* Standardized Book Card Styles */
+.book-card {
     flex: 0 0 200px;
     min-width: 200px;
-    margin: 0;
-    transform: none;
+    height: 280px;
     display: flex;
     flex-direction: column;
-    height: 280px; /* Increased height to show all info */
+    background: var(--surface-color);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.book-card:hover {
+    transform: translateY(-4px);
 }
 
 .book-cover {
@@ -248,12 +255,13 @@
     flex-direction: column;
     gap: 2px;
     flex: 1;
+    min-height: 0;
 }
 
 .book-title {
     font-size: 0.95rem;
     font-weight: 500;
-    line-height: 1.2;
+    line-height: 1.1;
     margin-bottom: 2px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -268,95 +276,54 @@
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    margin-bottom: 2px;
 }
 
-/* Override any grid styles that might be applied */
-@media (max-width: 768px) {
-    .carousel-container {
-        display: flex;
-        grid-template-columns: none;
-    }
+.book-year {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: auto;
+}
 
-    .carousel-container .book-card {
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .book-card {
         flex: 0 0 140px;
         min-width: 140px;
         height: 220px;
-        gap: 0; /* Remove gap between elements */
     }
     
     .book-cover {
         height: 170px;
-        margin-bottom: 0; /* Remove margin between cover and info */
-    }
-
-    .book-info {
-        padding: 2px 4px;
-        height: 50px;
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-    }
-
-    .book-title {
-        font-size: 0.82rem;
-        margin: 0;
-        line-height: 1.2;
-    }
-
-    .book-author {
-        font-size: 0.72rem;
-        margin: 0;
-    }
-
-    .featured-wrapper {
-        padding: 0 32px; /* Adjust padding for smaller buttons on mobile */
-    }
-
-    .book-cover img {
-        height: 120px; /* Reduced from 140px */
-    }
-
-    .section-header {
-        padding: 0 var(--spacing-sm);
-        margin: var(--spacing-sm) 0 var(--spacing-xs);
-    }
-
-    .view-all {
-        font-size: 0.9rem;
-        margin-right: var(--spacing-sm);
-    }
-
-    .carousel-container .book-card {
-        flex: 0 0 140px;
-        min-width: 140px;
-        height: 220px;
     }
     
-    .book-cover {
-        height: 160px;
-        margin-bottom: 4px;  /* Reduced from var(--spacing-xs) */
-    }
-
     .book-info {
         padding: 4px;
         gap: 1px;
-        line-height: 1.1;
+        display: flex;
+        flex-direction: column;
+        min-height: 50px;
     }
-
+    
     .book-title {
         font-size: 0.82rem;
+        line-height: 1.1;
         margin-bottom: 1px;
-        -webkit-line-clamp: 2;
     }
-
+    
     .book-author {
         font-size: 0.72rem;
-        margin-top: 0;
+        margin-bottom: 1px;
+    }
+    
+    .book-year {
+        font-size: 0.7rem;
+        margin-top: 1px;
     }
 }
 
 @media (max-width: 480px) {
-    .carousel-container .book-card {
+    .book-card {
         flex: 0 0 120px;
         min-width: 120px;
         height: 190px;
@@ -365,25 +332,17 @@
     .book-cover {
         height: 150px;
     }
-
+    
     .book-info {
         padding: 2px;
-        height: 40px;
-    }
-
-    .carousel-container .book-card {
-        flex: 0 0 120px;
-        min-width: 120px;
-        height: 200px;
     }
     
-    .book-cover {
-        height: 140px;
-        margin-bottom: 2px;  /* Further reduced */
+    .book-title {
+        font-size: 0.8rem;
     }
-
-    .book-info {
-        padding: 2px;
+    
+    .book-author {
+        font-size: 0.7rem;
     }
 }
 
@@ -487,74 +446,6 @@
     padding: 0 var(--spacing-md);
 }
 
-.book-info {
-    padding: var(--spacing-xs);
-    margin-top: var(--spacing-xs);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    line-height: 1.2;
-}
-
-.book-title {
-    font-size: 0.95rem;
-    margin-bottom: var(--spacing-xs);
-}
-
-.book-author {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    margin-top: 2px;
-}
-
-@media (max-width: 768px) {
-    .book-info {
-        padding: var(--spacing-xs) var(--spacing-xs) 0;
-        margin-top: 2px;
-        font-size: 0.85rem;
-        line-height: 1.1;
-    }
-
-    .book-title {
-        font-size: 0.85rem;
-        margin-bottom: 2px;
-    }
-
-    .book-author {
-        font-size: 0.75rem;
-    }
-
-    .section-header {
-        padding: 0 var(--spacing-sm);
-        margin: var(--spacing-sm) 0 var(--spacing-xs);
-    }
-
-    .view-all {
-        font-size: 0.9rem;
-        margin-right: var(--spacing-sm);
-    }
-}
-
-@media (max-width: 480px) {
-    .book-info {
-        padding: var(--spacing-xs) var(--spacing-xs) 0;
-        font-size: 0.8rem;
-    }
-
-    .book-title {
-        font-size: 0.8rem;
-    }
-
-    .book-author {
-        font-size: 0.7rem;
-    }
-
-    .section-header h2 {
-        font-size: 1.25rem;
-    }
-}
-
 .view-all {
     color: var(--primary-color);
     text-decoration: none;
@@ -621,25 +512,6 @@
         gap: var(--spacing-md);
     }
 
-    .book-card {
-        flex: 0 0 160px;
-        height: 80px; /* Reduced from 220px */
-    }
-    
-    .book-cover img {
-        height: 120px; /* Reduced from 140px */
-    }
-
-    .carousel-container {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    }
-
-    .carousel-container .book-card {
-        flex: 0 0 160px;
-        min-width: 160px;
-        height: 180px; /* Reduced from 220px */
-    }
-
     .section-header {
         padding: 0 var(--spacing-md);
         margin: var(--spacing-md) 0;
@@ -682,15 +554,6 @@
         gap: var(--spacing-lg);
     }
 
-    .book-card {
-        padding: var(--spacing-sm);
-        height: 50px; /* Reduced from 60px */
-    }
-
-    .book-title {
-        font-size: 1rem;
-    }
-
     .carousel-btn {
         width: 30px;
         height: 30px;
@@ -713,26 +576,6 @@
     .reading-lists,
     .recent-activity {
         padding: 0 var(--spacing-sm);
-    }
-}
-
-@media (max-width: 480px) {
-    .carousel-container .book-card {
-        flex: 0 0 140px;
-        min-width: 140px;
-        height: 220px;
-    }
-    
-    .book-cover {
-        height: 140px;
-    }
-    
-    .book-title {
-        font-size: 0.8rem;
-    }
-    
-    .book-author {
-        font-size: 0.7rem;
     }
 }
 
@@ -760,16 +603,6 @@
 
     .featured-books {
         margin: 0 0 var(--spacing-md);
-    }
-
-    .carousel-container .book-card {
-        flex: 0 0 140px;
-        min-width: 140px;
-        height: 160px;
-    }
-
-    .book-cover img {
-        height: 100px;
     }
 
     .section-header {
@@ -800,16 +633,6 @@
 
     .search-button {
         padding: var(--spacing-sm) var(--spacing-md);
-    }
-
-    .carousel-container .book-card {
-        flex: 0 0 120px;
-        min-width: 120px;
-        height: 140px;
-    }
-
-    .book-cover img {
-        height: 90px;
     }
 
     .carousel-btn {
@@ -977,12 +800,6 @@
         width: 32px;
         height: 32px;
         font-size: 1rem;
-    }
-
-    .carousel-container .book-card {
-        flex: 0 0 160px;
-        min-width: 160px;
-        height: 180px; /* Reduced from 220px */
     }
 }
 
