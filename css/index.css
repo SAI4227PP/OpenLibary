@@ -231,10 +231,7 @@
     border-radius: var(--border-radius-md);
     overflow: hidden;
     transition: transform 0.2s;
-}
-
-.book-card:hover {
-    transform: translateY(-4px);
+    padding: var(--spacing-xs);
 }
 
 .book-cover {
@@ -272,17 +269,18 @@
 .book-author {
     font-size: 0.85rem;
     color: var(--text-secondary);
+    margin-bottom: 2px;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    margin-bottom: 2px;
 }
 
 .book-year {
     font-size: 0.8rem;
     color: var(--text-secondary);
     margin-top: auto;
+    display: block;
 }
 
 /* Responsive adjustments */
@@ -291,34 +289,28 @@
         flex: 0 0 140px;
         min-width: 140px;
         height: 220px;
+        padding: var(--spacing-xs);
     }
     
     .book-cover {
-        height: 170px;
+        height: 150px;
     }
     
     .book-info {
         padding: 4px;
-        gap: 1px;
-        display: flex;
-        flex-direction: column;
-        min-height: 50px;
+        min-height: 70px;
     }
     
     .book-title {
         font-size: 0.82rem;
-        line-height: 1.1;
-        margin-bottom: 1px;
     }
     
     .book-author {
         font-size: 0.72rem;
-        margin-bottom: 1px;
     }
     
     .book-year {
         font-size: 0.7rem;
-        margin-top: 1px;
     }
 }
 
