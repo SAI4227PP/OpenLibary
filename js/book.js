@@ -14,13 +14,16 @@ const domElements = {
     bookCover: document.getElementById('bookCover'),
     bookAuthors: document.getElementById('bookAuthors'),
     bookDescription: document.getElementById('bookDescription'),
-    bookMetadata: document.getElementById('bookMetadata'),
     bookSubjects: document.getElementById('bookSubjects'),
     bookPublishers: document.getElementById('bookPublishers'),
     bookISBNs: document.getElementById('bookISBNs'),
     bookLinks: document.getElementById('bookLinks'),
-    bookEditions: document.getElementById('bookEditions')
-    // Removed debug-related elements
+    bookEditions: document.getElementById('bookEditions'),
+    firstPublished: document.getElementById('firstPublished'),
+    latestRevision: document.getElementById('latestRevision'),
+    revision: document.getElementById('revision'),
+    created: document.getElementById('created'),
+    lastModified: document.getElementById('lastModified')
 };
 
 // Validate required DOM elements
@@ -160,60 +163,57 @@ function updateBookUI(book) {
             domElements.bookAuthors.innerHTML = authors.join(', ');
         }
 
-        // Create detailed metadata section
-        if (domElements.bookMetadata) {
-            const metadataHTML = `
-                <div class="book-metadata">
-                    ${book.first_publish_date ? `<div class="metadata-item">
-                        <span class="label">First Published:</span> ${book.first_publish_date}
-                    </div>` : ''}
-                    
-                    ${book.latest_revision ? `<div class="metadata-item">
-                        <span class="label">Latest Revision:</span> ${book.latest_revision}
-                    </div>` : ''}
-                    
-                    ${book.revision ? `<div class="metadata-item">
-                        <span class="label">Revision:</span> ${book.revision}
-                    </div>` : ''}
-                    
-                    ${book.created ? `<div class="metadata-item">
-                        <span class="label">Created:</span> ${new Date(book.created.value).toLocaleDateString()}
-                    </div>` : ''}
-                    
-                    ${book.last_modified ? `<div class="metadata-item">
-                        <span class="label">Last Modified:</span> ${new Date(book.last_modified.value).toLocaleDateString()}
-                    </div>` : ''}
-
-                    ${book.genres ? `<div class="metadata-item">
-                        <span class="label">Genres:</span> ${book.genres.join(', ')}
-                    </div>` : ''}
-
-                    ${book.original_languages ? `<div class="metadata-item">
-                        <span class="label">Original Languages:</span> 
-                        ${book.original_languages.map(lang => lang.key.split('/').pop()).join(', ')}
-                    </div>` : ''}
-
-                    ${book.series ? `<div class="metadata-item">
-                        <span class="label">Series:</span> ${book.series.join(', ')}
-                    </div>` : ''}
-
-                    ${book.dewey_decimal_class ? `<div class="metadata-item">
-                        <span class="label">Dewey Decimal:</span> ${book.dewey_decimal_class.join(', ')}
-                    </div>` : ''}
-
-                    ${book.lc_classifications ? `<div class="metadata-item">
-                        <span class="label">LC Classification:</span> ${book.lc_classifications.join(', ')}
-                    </div>` : ''}
-
-                    ${book.contributions ? `<div class="metadata-item">
-                        <span class="label">Contributors:</span> ${book.contributions.join(', ')}
-                    </div>` : ''}
-                </div>
-            `;
-            domElements.bookMetadata.innerHTML = metadataHTML;
+        // Update metadata details
+        if (book.first_publish_date) {
+            domElements.firstPublished.textContent = book.first_publish_date;
+        }
+        if (book.latest_revision) {
+            domElements.latestRevision.textContent = book.latest_revision;
+        }
+        if (book.revision) {
+            domElements.revision.textContent = book.revision;
+        }
+        if (book.created) {
+            domElements.created.textContent = new Date(book.created.value).toLocaleDateString();
+        }
+        if (book.last_modified) {
+            domElements.lastModified.textContent = new Date(book.last_modified.value).toLocaleDateString();
         }
 
-        // Update description with safe markdown parsing and full text
+        // Update subjects
+        if (domElements.bookSubjects) {
+            if (book.subjects && book.subjects.length > 0) {
+                const subjectsHTML = book.subjects.map(subject => 
+                    `<a href="subjects.html?subject=${encodeURIComponent(subject)}" class="tag">${subject}</a>`
+                ).join('');
+                domElements.bookSubjects.innerHTML = subjectsHTML;
+            } else {
+                domElements.bookSubjects.innerHTML = 'No subjects available';
+            }
+        }
+
+        // Update publishers
+        if (domElements.bookPublishers) {
+            if (book.publishers && book.publishers.length > 0) {
+                domElements.bookPublishers.innerHTML = book.publishers.join(', ');
+            } else {
+                domElements.bookPublishers.innerHTML = 'Publisher unknown';
+            }
+        }
+
+        // Update ISBNs
+        if (domElements.bookISBNs) {
+            if (book.isbn_13 || book.isbn_10) {
+                const isbns = [];
+                if (book.isbn_13) isbns.push(...book.isbn_13.map(isbn => `ISBN-13: ${isbn}`));
+                if (book.isbn_10) isbns.push(...book.isbn_10.map(isbn => `ISBN-10: ${isbn}`));
+                domElements.bookISBNs.innerHTML = isbns.join('<br>');
+            } else {
+                domElements.bookISBNs.innerHTML = 'No ISBN available';
+            }
+        }
+
+        // Update description with safe markdown parsing
         if (domElements.bookDescription) {
             const description = domElements.bookDescription;
             if (book.description) {
@@ -234,38 +234,29 @@ function updateBookUI(book) {
             }
         }
 
-        // Update subjects with categories and full lists
-        if (domElements.bookSubjects) {
-            const subjectsContainer = domElements.bookSubjects;
-            if (book.subjects && book.subjects.length > 0) {
-                const subjectsByType = {
-                    Subjects: book.subjects || [],
-                    Places: book.subject_places || [],
-                    People: book.subject_people || [],
-                    Times: book.subject_times || [],
-                    'Original Languages': book.original_languages?.map(lang => lang.key.split('/').pop()) || [],
-                    'Work Titles': book.work_titles || []
-                };
+        // Update ratings and stats
+        if (book.ratings || book.averageRating > 0) {
+            const rating = book.averageRating;
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            
+            const starsHTML = '★'.repeat(fullStars) + 
+                             (hasHalfStar ? '½' : '') +
+                             '☆'.repeat(5 - fullStars - (hasHalfStar ? 1 : 0));
 
-                const subjectHTML = Object.entries(subjectsByType)
-                    .filter(([_, items]) => items.length > 0)
-                    .map(([type, items]) => `
-                        <div class="subject-section">
-                            <h4>${type}</h4>
-                            <div class="tags">
-                                ${items.map(item => `
-                                    <a href="subjects.html?subject=${encodeURIComponent(item)}" 
-                                       class="tag" title="Browse books about ${item}">
-                                        ${item}
-                                    </a>
-                                `).join('')}
-                            </div>
-                        </div>
-                    `).join('');
-                
-                subjectsContainer.innerHTML = subjectHTML;
-            } else {
-                subjectsContainer.innerHTML = '<p>No subjects available.</p>';
+            const ratingDisplay = document.querySelector('.rating-display');
+            if (ratingDisplay) {
+                ratingDisplay.querySelector('.stars').innerHTML = starsHTML;
+                ratingDisplay.querySelector('.rating-number').textContent = rating.toFixed(1);
+            }
+
+            const stats = document.querySelector('.stats');
+            if (stats) {
+                stats.querySelector('.rating-count').textContent = `${book.ratingsCount.toLocaleString()} ratings`;
+                stats.querySelector('.currently-reading').textContent = 
+                    `${book.currentlyReading.toLocaleString()} currently reading`;
+                stats.querySelector('.want-to-read').textContent = 
+                    `${book.readingCount.toLocaleString()} want to read`;
             }
         }
 
@@ -296,26 +287,6 @@ function updateBookUI(book) {
                     </ul>
                 `;
             }
-        }
-
-        // Update ratings and stats
-        if (book.ratings || book.averageRating > 0) {
-            const ratingHTML = `
-                <div class="rating-info">
-                    <div class="average-rating">
-                        <span class="stars">${'★'.repeat(Math.round(book.averageRating))}</span>
-                        <span class="rating-number">${book.averageRating.toFixed(1)}</span>
-                    </div>
-                    <div class="rating-details">
-                        <div class="rating-count">${book.ratingsCount} ratings</div>
-                        <div class="reading-stats">
-                            <div>${book.currentlyReading} currently reading</div>
-                            <div>${book.readingCount} want to read</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.querySelector('.book-info').insertAdjacentHTML('beforeend', ratingHTML);
         }
 
         // Update favorite button

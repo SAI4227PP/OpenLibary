@@ -70,6 +70,56 @@
     line-height: 1;
 }
 
+/* Add after .book-actions styles */
+.ratings-bookshelves {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--surface-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--card-shadow);
+}
+
+.ratings-section {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: #f8f8f8;
+    border-radius: 8px;
+}
+
+.rating-display {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.stars {
+    color: #ffd700;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+}
+
+.rating-number {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.stats {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.rating-count {
+    margin-bottom: 0.5rem;
+}
+
+.shelf-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
 .book-header {
     display: grid;
     grid-template-columns: 300px 1fr;
@@ -480,6 +530,34 @@
     opacity: 0.7;
 }
 
+/* Add styles for metadata details in header */
+.book-metadata-details {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--surface-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--card-shadow);
+}
+
+.book-metadata-details .metadata-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-sm);
+}
+
+.book-metadata-details .metadata-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+}
+
+.book-metadata-details .label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
 /* Debug Section Styles */
 .debug-section {
     margin-top: var(--spacing-xl);
@@ -623,6 +701,15 @@
     .edition-card {
         flex: 0 0 calc(50% - var(--spacing-md));
         min-width: 160px;
+    }
+
+    .ratings-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .stats {
+        align-items: center;
     }
 }
 
