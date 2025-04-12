@@ -339,7 +339,8 @@ async function loadBookEditions(bookKey) {
             document.querySelector('.book-editions .section-header h2').textContent = 
                 `Available Editions (${data.entries.length})`;
 
-            const editionsHTML = data.entries.slice(0, 6).map(edition => {
+            // Show only first 6 editions initially
+            const editionsHTML = data.entries.slice(0, 7).map(edition => {
                 const coverId = edition.covers?.[0];
                 const coverContent = coverId 
                     ? `<img src="${COVERS_BASE_URL}/id/${coverId}-M.jpg" alt="${edition.title}" 
@@ -364,9 +365,15 @@ async function loadBookEditions(bookKey) {
             }).join('');
             
             editionsContainer.innerHTML = editionsHTML;
+
+            // Show View All link only if there are more than 6 editions
+            const viewAllLink = document.querySelector('.book-editions .view-all');
+            viewAllLink.style.display = data.entries.length > 7 ? 'block' : 'none';
         } else {
             document.querySelector('.book-editions .section-header h2').textContent = 'Available Editions (0)';
             editionsContainer.innerHTML = '<p>No other editions available.</p>';
+            // Hide View All link if there are no editions
+            document.querySelector('.book-editions .view-all').style.display = 'none';
         }
     } catch (error) {
         console.error('Error loading editions:', error);
@@ -376,20 +383,53 @@ async function loadBookEditions(bookKey) {
 }
 
 // Add event listener for View All editions
-document.querySelector('.view-all').addEventListener('click', async (e) => {
+document.querySelector('.book-editions .view-all').addEventListener('click', async (e) => {
     e.preventDefault();
-    try {
+    const viewAllLink = e.target;
+    const editionsContainer = domElements.bookEditions;
+
+    if (viewAllLink.textContent === 'View All') {
+        try {
+            const editionsUrl = `${API_BASE_URL}${currentBookKey}/editions.json`;
+            const response = await fetch(editionsUrl);
+            const data = await response.json();
+            
+            if (data.entries && data.entries.length > 0) {
+                const editionsHTML = data.entries.map(edition => {
+                    const coverId = edition.covers?.[0];
+                    const coverContent = coverId 
+                        ? `<img src="${COVERS_BASE_URL}/id/${coverId}-M.jpg" alt="${edition.title}" loading="lazy">`
+                        : `<div class="no-cover-placeholder">No Cover</div>`;
+                    
+                    return `
+                        <div class="edition-card">
+                            ${coverContent}
+                            <div class="edition-info">
+                                <h3>${edition.title}</h3>
+                                <p class="publish-date">${edition.publish_date || 'Publication date unknown'}</p>
+                                <p class="publisher">${edition.publishers?.[0] || 'Publisher unknown'}</p>
+                                ${edition.number_of_pages ? `<p class="pages">${edition.number_of_pages} pages</p>` : ''}
+                                ${edition.languages?.[0]?.key ? 
+                                    `<p class="language">Language: ${edition.languages[0].key.split('/').pop()}</p>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                editionsContainer.innerHTML = editionsHTML;
+                viewAllLink.textContent = 'View Less';
+            }
+        } catch (error) {
+            console.error('Error loading all editions:', error);
+        }
+    } else {
+        // Show only first 6 editions when "View Less" is clicked
         const editionsUrl = `${API_BASE_URL}${currentBookKey}/editions.json`;
         const response = await fetch(editionsUrl);
         const data = await response.json();
         
         if (data.entries && data.entries.length > 0) {
-            // Keep the count in the heading when showing all editions
-            document.querySelector('.book-editions .section-header h2').textContent = 
-                `Available Editions (${data.entries.length})`;
-
-            const editionsContainer = domElements.bookEditions;
-            const editionsHTML = data.entries.map(edition => {
+            const editionsHTML = data.entries.slice(0, 7).map(edition => {
                 const coverId = edition.covers?.[0];
                 const coverContent = coverId 
                     ? `<img src="${COVERS_BASE_URL}/id/${coverId}-M.jpg" alt="${edition.title}" loading="lazy">`
@@ -411,9 +451,8 @@ document.querySelector('.view-all').addEventListener('click', async (e) => {
             }).join('');
             
             editionsContainer.innerHTML = editionsHTML;
+            viewAllLink.textContent = 'View All';
         }
-    } catch (error) {
-        console.error('Error loading all editions:', error);
     }
 });
 
@@ -450,9 +489,12 @@ async function loadRelatedBooks(bookKey) {
             const relatedSection = document.createElement('section');
             relatedSection.className = 'related-books';
             relatedSection.innerHTML = `
-                <h2>Related Books</h2>
+                <div class="section-header">
+                    <h2>Related Books</h2>
+                    <a href="#" class="view-all">View All</a>
+                </div>
                 <div class="related-grid">
-                    ${data.docs.map(book => {
+                    ${data.docs.slice(0, 8).map(book => {
                         const coverUrl = book.cover_i ? 
                             `${COVERS_BASE_URL}/id/${book.cover_i}-M.jpg` : 
                             '../images/no-cover.png';
@@ -471,6 +513,57 @@ async function loadRelatedBooks(bookKey) {
                     }).join('')}
                 </div>
             `;
+
+            // Show View All link only if there are more than 6 books
+            const viewAllLink = relatedSection.querySelector('.view-all');
+            viewAllLink.style.display = data.docs.length > 8 ? 'block' : 'none';
+
+            // Add click handler for View All
+            viewAllLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                const relatedGrid = relatedSection.querySelector('.related-grid');
+
+                if (e.target.textContent === 'View All') {
+                    relatedGrid.innerHTML = data.docs.map(book => {
+                        const coverUrl = book.cover_i ? 
+                            `${COVERS_BASE_URL}/id/${book.cover_i}-M.jpg` : 
+                            '../images/no-cover.png';
+                        const bookKey = book.key.startsWith('/works/') ? book.key : `/works/${book.key}`;
+                        return `
+                            <div class="related-book" onclick="window.location.href='book.html?key=${encodeURIComponent(bookKey)}'">
+                                <img src="${coverUrl}" alt="${book.title}" loading="lazy"
+                                     onerror="this.src='../images/no-cover.png'">
+                                <h3>${book.title}</h3>
+                                <p class="author">${book.author_name?.[0] || 'Unknown Author'}</p>
+                                <p class="publish-year">Year: ${book.first_publish_year || 'Unknown'}</p>
+                                <p class="language">Language: ${book.language?.[0] || 'Unknown'}</p>
+                                ${book.subject ? `<p class="subjects">Subjects: ${book.subject.slice(0, 3).join(', ')}</p>` : ''}
+                            </div>
+                        `;
+                    }).join('');
+                    e.target.textContent = 'View Less';
+                } else {
+                    relatedGrid.innerHTML = data.docs.slice(0, 8).map(book => {
+                        const coverUrl = book.cover_i ? 
+                            `${COVERS_BASE_URL}/id/${book.cover_i}-M.jpg` : 
+                            '../images/no-cover.png';
+                        const bookKey = book.key.startsWith('/works/') ? book.key : `/works/${book.key}`;
+                        return `
+                            <div class="related-book" onclick="window.location.href='book.html?key=${encodeURIComponent(bookKey)}'">
+                                <img src="${coverUrl}" alt="${book.title}" loading="lazy"
+                                     onerror="this.src='../images/no-cover.png'">
+                                <h3>${book.title}</h3>
+                                <p class="author">${book.author_name?.[0] || 'Unknown Author'}</p>
+                                <p class="publish-year">Year: ${book.first_publish_year || 'Unknown'}</p>
+                                <p class="language">Language: ${book.language?.[0] || 'Unknown'}</p>
+                                ${book.subject ? `<p class="subjects">Subjects: ${book.subject.slice(0, 3).join(', ')}</p>` : ''}
+                            </div>
+                        `;
+                    }).join('');
+                    e.target.textContent = 'View All';
+                }
+            });
+
             document.querySelector('.book-details').appendChild(relatedSection);
         }
     } catch (error) {
