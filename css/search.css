@@ -195,7 +195,7 @@ nav a:hover::after {
 
 .book-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(6, 1fr);  /* Show 6 cards in desktop */
     gap: var(--spacing-lg);
     margin-top: var(--spacing-md);
 }
@@ -302,24 +302,56 @@ footer {
     background: var(--surface-color);
 }
 
+/* Loading Spinner */
+.loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.spinner {
+    margin: 0 auto;
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--border-color);
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Hide pagination */
+.hidden {
+    display: none !important;
+}
+
 /* Responsive */
-@media (max-width: 768px) {
-    .search-box {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .search-filters {
-        justify-content: center;
-    }
-
+@media (max-width: 1200px) {
     .book-grid {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .book-grid {
+        grid-template-columns: repeat(3, 1fr);  /* Show 3 cards in mobile */
+    }
+}
+
+@media (max-width: 576px) {
+    .book-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 480px) {
     .book-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
 }

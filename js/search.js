@@ -71,7 +71,16 @@ async function performSearch() {
 
     currentQuery = searchInput.value.trim();
     searchResults.innerHTML = '';
-    searchResults.appendChild(window.libraryUtils.showLoading());
+    pagination.classList.add('hidden');
+    
+    // Create a wrapper div for positioning
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'relative';
+    wrapper.style.minHeight = '400px';  // Give some height for the spinner
+    wrapper.appendChild(window.libraryUtils.showLoading());
+    searchResults.appendChild(wrapper);
+    
+    resultsCount.classList.add('hidden');
     
     try {
         let searchUrl = '';
