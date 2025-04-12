@@ -6,6 +6,18 @@
     <title>Book Details - Open Library</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/book.css">
+    <!-- Add marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // Configure marked with secure options
+        marked.setOptions({
+            sanitize: true, // Sanitize HTML
+            gfm: true, // GitHub flavored markdown
+            breaks: true, // Convert line breaks to <br>
+            smartLists: true, // Use smarter list behavior
+            xhtml: true // Use XHTML compliant tags
+        });
+    </script>
 </head>
 <body>
     <div id="main-nav-placeholder"></div>
@@ -20,11 +32,39 @@
                 </div>
                 <div class="book-info">
                     <h1 id="bookTitle"></h1>
-                    <p id="bookAuthors"></p>
-                    <p id="bookPublished"></p>
-                    <button id="favoriteBtn" class="favorite-btn">
-                        <span class="heart-icon">♥</span> Add to Favorites
-                    </button>
+                    <p id="bookAuthors" class="book-author"></p>
+                    <div class="book-metadata-tags">
+                        <span class="metadata-tag">
+                            <i class="fas fa-calendar"></i>
+                            <span id="bookPublished"></span>
+                        </span>
+                        <span class="metadata-tag">
+                            <i class="fas fa-book"></i>
+                            <span id="pageCount"></span>
+                        </span>
+                        <span class="metadata-tag">
+                            <i class="fas fa-language"></i>
+                            <span id="language">English</span>
+                        </span>
+                    </div>
+                    <div class="book-actions">
+                        <button id="favoriteBtn" class="favorite-btn">
+                            <span class="heart-icon">♡</span>
+                            Add to Favorites
+                        </button>
+                    </div>
+
+                    <!-- Add Ratings and Bookshelves Data -->
+                    <div class="ratings-bookshelves">
+                        <div class="ratings-data">
+                            <h3>Ratings</h3>
+                            <div id="ratingsData"></div>
+                        </div>
+                        <div class="bookshelves-data">
+                            <h3>Bookshelves</h3>
+                            <div id="bookshelvesData"></div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -34,9 +74,9 @@
             </section>
 
             <section class="book-metadata">
-                <div class="metadata-grid">
+                <h2>Book Details</h2>
+                <div id="bookMetadata" class="metadata-grid">
                     <div class="metadata-item">
-                        <h3>Subjects</h3>
                         <div id="bookSubjects"></div>
                     </div>
                     <div class="metadata-item">
@@ -49,9 +89,16 @@
                     </div>
                 </div>
             </section>
+            
+            <section class="external-links-section">
+                <div id="bookLinks"></div>
+            </section>
 
             <section class="book-editions">
-                <h2>Available Editions</h2>
+                <div class="section-header">
+                    <h2>Available Editions</h2>
+                    <a href="#" class="view-all">View All</a>
+                </div>
                 <div id="bookEditions" class="editions-grid"></div>
             </section>
 
@@ -63,6 +110,7 @@
                 </div>
                 <div id="textSearchResults"></div>
             </section>
+
         </div>
 
         <div id="errorMessage" class="error-message hidden">
@@ -75,6 +123,8 @@
         <p>&copy; 2025 Open Library. Powered by Open Library APIs.</p>
     </footer>
 
+    <!-- Load dependencies in correct order -->
+    <script src="../js/utils.js"></script>
     <script src="../js/script.js"></script>
     <script src="../js/loadNav.js"></script>
     <script src="../js/book.js"></script>
