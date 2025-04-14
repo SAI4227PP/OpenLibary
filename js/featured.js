@@ -4,7 +4,18 @@ const loadingState = document.querySelector('.loading-state');
 const pagination = document.getElementById('pagination');
 
 // Initialize page
-document.addEventListener('DOMContentLoaded', loadFeaturedBooks);
+document.addEventListener('DOMContentLoaded', () => {
+    // Wait for libraryUtils to be initialized
+    if (window.libraryUtils) {
+        loadFeaturedBooks();
+    } else {
+        // Listen for the libraryUtils initialization event
+        document.addEventListener('libraryUtilsReady', loadFeaturedBooks);
+        document.addEventListener('libraryUtilsError', () => {
+            loadingState.innerHTML = '<p>Error: Library utilities failed to initialize. Please refresh the page.</p>';
+        });
+    }
+});
 
 // Load featured books
 async function loadFeaturedBooks() {
@@ -16,6 +27,10 @@ async function loadFeaturedBooks() {
         const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
         const response = await window.libraryUtils.searchBooks(`subject:${randomSubject}`, 1);
         const books = response.docs.slice(0, 28); // Get 28 books to fill 4 rows of 7
+        
+        if (!books || books.length === 0) {
+            throw new Error('No books found');
+        }
         
         const bookCards = books.map(book => {
             const card = window.libraryUtils.createBookCard(book);

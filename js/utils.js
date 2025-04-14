@@ -1,32 +1,50 @@
 // Library utility functions
 window.libraryUtils = {
+    API_BASE_URL: 'https://openlibrary.org',
+    COVERS_BASE_URL: 'https://covers.openlibrary.org/b',
+
+    init() {
+        return new Promise((resolve) => {
+            // Check if the API is accessible
+            fetch(this.API_BASE_URL + '/works/OL45804W.json')
+                .then(response => response.json())
+                .then(() => {
+                    console.log('Library utilities initialized successfully');
+                    resolve(true);
+                })
+                .catch(error => {
+                    console.error('Error initializing library utilities:', error);
+                    resolve(false);
+                });
+        });
+    },
+
     showLoading() {
-        const spinner = document.createElement('div');
-        spinner.className = 'spinner';
-        return spinner;
+        const loader = document.createElement('div');
+        loader.className = 'loading-spinner';
+        return loader;
     },
 
     createBookCard(book) {
         const card = document.createElement('div');
-        card.className = 'result-card';
+        card.className = 'book-card';
         
-        const coverContent = book.cover_i 
-            ? `<img class="result-image" src="https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg" 
-                alt="${this.escapeHtml(book.title)}" 
-                onerror="this.replaceWith(document.createElement('div').appendChild(
-                    document.createTextNode('No Cover')).parentElement.className='no-cover-placeholder')">`
-            : `<div class="no-cover-placeholder">No Cover</div>`;
+        const coverUrl = book.cover_i 
+            ? `${this.COVERS_BASE_URL}/id/${book.cover_i}-M.jpg`
+            : '../images/default-cover.jpg';
 
         card.innerHTML = `
-            ${coverContent}
-            <div class="result-info">
-                <h3 class="result-title">${this.escapeHtml(book.title)}</h3>
-                <p class="result-author">${this.escapeHtml(book.author_name?.[0] || 'Unknown Author')}</p>
-                ${book.first_publish_year ? `<p class="result-year">${book.first_publish_year}</p>` : ''}
+            <div class="book-cover">
+                <img src="${coverUrl}" alt="${this.escapeHtml(book.title)}" 
+                    onerror="this.src='../images/default-cover.jpg'">
+            </div>
+            <div class="book-info">
+                <h3 class="book-title">${this.escapeHtml(book.title)}</h3>
+                <p class="book-author">${this.escapeHtml(book.author_name?.[0] || 'Unknown Author')}</p>
+                ${book.first_publish_year ? `<span class="book-year">${book.first_publish_year}</span>` : ''}
             </div>
         `;
 
-        // Make the card clickable with proper works path
         card.addEventListener('click', () => {
             const workKey = book.key.startsWith('/works/') ? book.key : `/works/${book.key}`;
             window.location.href = `/pages/book.html?key=${encodeURIComponent(workKey)}`;
@@ -38,7 +56,7 @@ window.libraryUtils = {
     handleApiError(error) {
         console.error('API Error:', error);
         return {
-            error: 'An error occurred while searching. Please try again.'
+            error: error.message || 'An error occurred while searching. Please try again.'
         };
     },
 
@@ -83,29 +101,54 @@ window.libraryUtils = {
 
     // API related utilities
     async getBookDetails(key) {
-        const workKey = key.startsWith('/works/') ? key : `/works/${key}`;
-        const response = await fetch(`${API_BASE_URL}${workKey}.json`);
-        if (!response.ok) {
-            throw new Error(`Book not found: ${response.status}`);
+        try {
+            const workKey = key.startsWith('/works/') ? key : `/works/${key}`;
+            const response = await fetch(`${this.API_BASE_URL}${workKey}.json`);
+            if (!response.ok) {
+                throw new Error(`Book not found: ${response.status}`);
+            }
+            return response.json();
+        } catch (error) {
+            return this.handleApiError(error);
         }
-        return response.json();
     },
 
     async getAuthorDetails(key) {
-        const response = await fetch(`${API_BASE_URL}/authors/${key}.json`);
-        return response.json();
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/authors/${key}.json`);
+            if (!response.ok) {
+                throw new Error(`Author not found: ${response.status}`);
+            }
+            return response.json();
+        } catch (error) {
+            return this.handleApiError(error);
+        }
     },
 
     async getSubjects(subject) {
-        const response = await fetch(`${API_BASE_URL}/subjects/${subject}.json`);
-        return response.json();
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/subjects/${encodeURIComponent(subject)}.json`);
+            if (!response.ok) {
+                throw new Error(`Subject not found: ${response.status}`);
+            }
+            return response.json();
+        } catch (error) {
+            return this.handleApiError(error);
+        }
     },
 
     async searchBooks(query, page = 1) {
-        const response = await fetch(
-            `${API_BASE_URL}/search.json?q=${encodeURIComponent(query)}&page=${page}`
-        );
-        return response.json();
+        try {
+            const response = await fetch(
+                `${this.API_BASE_URL}/search.json?q=${encodeURIComponent(query)}&page=${page}`
+            );
+            if (!response.ok) {
+                throw new Error(`Search failed: ${response.status}`);
+            }
+            return response.json();
+        } catch (error) {
+            return this.handleApiError(error);
+        }
     },
 
     // Date formatting
@@ -117,3 +160,13 @@ window.libraryUtils = {
         });
     }
 };
+
+// Initialize library utilities when script loads
+window.libraryUtils.init().then(success => {
+    if (!success) {
+        console.error('Failed to initialize library utilities');
+        document.dispatchEvent(new CustomEvent('libraryUtilsError'));
+    } else {
+        document.dispatchEvent(new CustomEvent('libraryUtilsReady'));
+    }
+});

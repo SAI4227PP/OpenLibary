@@ -167,17 +167,24 @@
         </div>
     </footer>
 
-    <script src="js/loadNav.js"></script>
+    <script src="js/utils.js"></script>
     <script src="js/script.js"></script>
     <script>
-        // Initialize homepage
+        // Initialize homepage after utils are loaded
         document.addEventListener('DOMContentLoaded', () => {
-            loadFeaturedBooks();
-            loadTrendingSubjects();
-            loadPopularLists();
-            loadRecentActivity();
-            loadLibraryStats();
-            updateAuthUI();
+            // Ensure library utilities are initialized
+            if (window.libraryUtils) {
+                loadFeaturedBooks();
+                loadTrendingSubjects();
+                loadPopularLists();
+                loadRecentActivity();
+                loadLibraryStats();
+                updateAuthUI();
+            } else {
+                console.error('Library utilities not loaded');
+                document.querySelector('.loading-state').innerHTML = 
+                    '<p>Error initializing library. Please refresh the page.</p>';
+            }
         });
 
         // Quick search functionality
@@ -227,5 +234,6 @@
             }
         }
     </script>
+    <script src="js/loadNav.js"></script>
 </body>
 </html>
