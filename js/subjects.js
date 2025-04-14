@@ -4,7 +4,7 @@ const popularSubjects = document.getElementById('popularSubjects');
 const subjectContent = document.getElementById('subjectContent');
 const currentSubjectTitle = document.getElementById('currentSubject');
 const subjectStats = document.getElementById('subjectStats');
-const subjectBooks = document.getElementById('subjectBooks');
+const subjectBooksContainer = document.getElementById('subjectBooks');
 const sortBooksSelect = document.getElementById('sortBooks');
 const subjectPagination = document.getElementById('subjectPagination');
 const prevPageBtn = document.getElementById('prevPage');
@@ -18,7 +18,7 @@ let currentSubject = '';
 let currentPage = 1;
 let currentSort = 'new';
 let subjectData = null;
-let subjectBooks = [];
+let subjectBooksList = [];
 
 // Popular subjects with emojis
 const popularSubjectsList = [
@@ -32,6 +32,13 @@ const popularSubjectsList = [
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', async () => {
+    // Wait for library utilities to load
+    if (!window.libraryUtils) {
+        console.error('Library utilities not loaded');
+        showError();
+        return;
+    }
+
     const params = new URLSearchParams(window.location.search);
     const subject = params.get('subject');
     
@@ -72,7 +79,7 @@ async function loadSubjectBooks(subject) {
     try {
         // Fetch subject data
         subjectData = await window.libraryUtils.getSubjects(subject);
-        subjectBooks = subjectData.works || [];
+        subjectBooksList = subjectData.works || [];
         
         // Update UI
         updateSubjectUI();
@@ -107,13 +114,13 @@ function updateSubjectUI() {
 function sortBooks() {
     switch (currentSort) {
         case 'title':
-            subjectBooks.sort((a, b) => a.title.localeCompare(b.title));
+            subjectBooksList.sort((a, b) => a.title.localeCompare(b.title));
             break;
         case 'rating':
-            subjectBooks.sort((a, b) => (b.rating_average || 0) - (a.rating_average || 0));
+            subjectBooksList.sort((a, b) => (b.rating_average || 0) - (a.rating_average || 0));
             break;
         case 'old':
-            subjectBooks.sort((a, b) => {
+            subjectBooksList.sort((a, b) => {
                 const dateA = a.first_publish_date ? new Date(a.first_publish_date) : new Date(0);
                 const dateB = b.first_publish_date ? new Date(b.first_publish_date) : new Date(0);
                 return dateA - dateB;
@@ -121,7 +128,7 @@ function sortBooks() {
             break;
         case 'new':
         default:
-            subjectBooks.sort((a, b) => {
+            subjectBooksList.sort((a, b) => {
                 const dateA = a.first_publish_date ? new Date(a.first_publish_date) : new Date(0);
                 const dateB = b.first_publish_date ? new Date(b.first_publish_date) : new Date(0);
                 return dateB - dateA;
@@ -132,25 +139,25 @@ function sortBooks() {
 
 // Display books with pagination
 function displayBooks() {
-    subjectBooks.innerHTML = '';
+    subjectBooksContainer.innerHTML = '';
     
     const itemsPerPage = 12;
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
-    const pageBooks = subjectBooks.slice(start, end);
+    const pageBooks = subjectBooksList.slice(start, end);
     
     if (pageBooks.length === 0) {
-        subjectBooks.innerHTML = '<p>No books found for this subject.</p>';
+        subjectBooksContainer.innerHTML = '<p>No books found for this subject.</p>';
         subjectPagination.classList.add('hidden');
         return;
     }
 
     pageBooks.forEach(book => {
-        subjectBooks.appendChild(window.libraryUtils.createBookCard(book));
+        subjectBooksContainer.appendChild(window.libraryUtils.createBookCard(book));
     });
 
     // Update pagination
-    const totalPages = Math.ceil(subjectBooks.length / itemsPerPage);
+    const totalPages = Math.ceil(subjectBooksList.length / itemsPerPage);
     subjectPagination.classList.toggle('hidden', totalPages <= 1);
     currentPageSpan.textContent = `Page ${currentPage} of ${totalPages}`;
     prevPageBtn.disabled = currentPage === 1;
@@ -197,7 +204,7 @@ prevPageBtn.addEventListener('click', () => {
 });
 
 nextPageBtn.addEventListener('click', () => {
-    const totalPages = Math.ceil(subjectBooks.length / 12);
+    const totalPages = Math.ceil(subjectBooksList.length / 12);
     if (currentPage < totalPages) {
         currentPage++;
         displayBooks();
