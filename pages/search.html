@@ -18,7 +18,9 @@
                     <input type="text" id="searchInput" placeholder="Search by title, author, or ISBN">
                     <button id="searchButton">Search</button>
                 </div>
-                <div class="search-filters">
+
+                
+                <!-- <div class="search-filters">
                     <select id="searchType">
                         <option value="all">All</option>
                         <option value="title">Title</option>
@@ -30,7 +32,22 @@
                         <input type="checkbox" id="fullTextSearch">
                         Full Text Search
                     </label>
+                </div> -->
+                <div class="search-filters" style="display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 24px;">
+                    <select id="searchType">
+                        <option value="all">All</option>
+                        <option value="title">Title</option>
+                        <option value="author">Author</option>
+                        <option value="isbn">ISBN</option>
+                        <option value="subject">Subject</option>
+                    </select>
+                    <label style="color: #8B4513; display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="fullTextSearch">
+                        Full Text Search
+                    </label>
                 </div>
+                
+
             </div>
         </section>
 
@@ -53,6 +70,7 @@
 
     <script src="../js/script.js"></script>
     <script src="../js/loadNav.js"></script>
+    <script src="../js/utils.js"></script>
     <script src="../js/search.js"></script>
 </body>
 </html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Editions - Open Library</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/book.css">
+    <link rel="stylesheet" href="../css/editions.css">
+</head>
+<body>
+    <div id="main-nav-placeholder"></div>
+
+    <main class="editions-page">
+        <div id="loading" class="loading"></div>
+        
+        <div id="editionsContent" class="hidden">
+            <div class="editions-header">
+                <h1>Editions of <span id="bookTitle"></span></h1>
+                <a href="#" id="backToBook" class="back-link">← Back to Book</a>
+            </div>
+
+            <div class="editions-filters">
+                <select id="languageFilter">
+                    <option value="">All Languages</option>
+                </select>
+                <select id="yearFilter">
+                    <option value="">All Years</option>
+                </select>
+                <select id="formatFilter">
+                    <option value="">All Formats</option>
+                </select>
+            </div>
+
+            <div id="editionsGrid" class="editions-grid full"></div>
+            
+            <div id="editionsPagination" class="pagination"></div>
+        </div>
+
+        <div id="errorMessage" class="error-message hidden">
+            <p>Sorry, we couldn't find the editions. Please try again.</p>
+            <a href="javascript:history.back()" class="back-button">Go Back</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Open Library. Powered by Open Library APIs.</p>
+    </footer>
+
+    <!-- Load utils.js first to define global variables -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../js/loadNav.js"></script>
+    <script src="../js/editions.js"></script>
+</body>
+</html>

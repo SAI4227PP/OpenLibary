@@ -8,12 +8,13 @@
 }
 
 .auth-container {
-    background: var(--surface-color);
+    background: #ffffff;
     border-radius: var(--border-radius-lg);
     padding: clamp(var(--spacing-lg), 5vw, var(--spacing-xl));
     width: 100%;
     max-width: 450px;
     box-shadow: var(--card-shadow);
+    color: #333333;
 }
 
 .auth-container h1 {
@@ -25,7 +26,7 @@
 
 .auth-subtitle {
     text-align: center;
-    color: var(--text-secondary);
+    color: #666666;
     margin-bottom: var(--spacing-xl);
 }
 
@@ -43,6 +44,7 @@
     display: block;
     margin-bottom: var(--spacing-xs);
     font-weight: 500;
+    color: #333333;
 }
 
 .form-group input {
@@ -52,6 +54,8 @@
     border-radius: var(--border-radius-md);
     font-size: 1rem;
     transition: border-color 0.3s, box-shadow 0.3s;
+    background-color: #ffffff;
+    color: #333333;
 }
 
 .form-group input:focus {

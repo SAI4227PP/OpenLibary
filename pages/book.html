@@ -6,6 +6,18 @@
     <title>Book Details - Open Library</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/book.css">
+    <!-- Add marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // Configure marked with secure options
+        marked.setOptions({
+            sanitize: true, // Sanitize HTML
+            gfm: true, // GitHub flavored markdown
+            breaks: true, // Convert line breaks to <br>
+            smartLists: true, // Use smarter list behavior
+            xhtml: true // Use XHTML compliant tags
+        });
+    </script>
 </head>
 <body>
     <div id="main-nav-placeholder"></div>
@@ -20,11 +32,65 @@
                 </div>
                 <div class="book-info">
                     <h1 id="bookTitle"></h1>
-                    <p id="bookAuthors"></p>
-                    <p id="bookPublished"></p>
-                    <button id="favoriteBtn" class="favorite-btn">
-                        <span class="heart-icon">♥</span> Add to Favorites
-                    </button>
+                    <p id="bookAuthors" class="book-author"></p>
+                    
+                    <!-- Metadata section -->
+                    <div class="book-metadata-details">
+                        <div class="metadata-grid">
+                            <div class="metadata-item">
+                                <span class="label">First Published:</span>
+                                <span id="firstPublished"></span>
+                            </div>
+                            <div class="metadata-item">
+                                <span class="label">Latest Revision:</span>
+                                <span id="latestRevision"></span>
+                            </div>
+                            <div class="metadata-item">
+                                <span class="label">Revision:</span>
+                                <span id="revision"></span>
+                            </div>
+                            <div class="metadata-item">
+                                <span class="label">Created:</span>
+                                <span id="created"></span>
+                            </div>
+                            <div class="metadata-item">
+                                <span class="label">Last Modified:</span>
+                                <span id="lastModified"></span>
+                            </div>
+                            
+                            <div class="metadata-item">
+                                <span class="label">Publishers:</span>
+                                <div id="bookPublishers"></div>
+                            </div>
+                            <div class="metadata-item">
+                                <span class="label">ISBN:</span>
+                                <div id="bookISBNs"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-actions">
+                        <button id="favoriteBtn" class="favorite-btn">
+                            <span class="heart-icon">♡</span>
+                            Add to Favorites
+                        </button>
+                    </div>
+
+                    <div class="ratings-bookshelves">
+                        <div class="ratings-section">
+                            <div class="rating-display">
+                                <div class="stars"></div>
+                                <div class="rating-number"></div>
+                            </div>
+                            <div class="stats">
+                                <div class="rating-count"></div>
+                                <div class="shelf-stats">
+                                    <div class="currently-reading"></div>
+                                    <div class="want-to-read"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -33,25 +99,20 @@
                 <div id="bookDescription"></div>
             </section>
 
-            <section class="book-metadata">
-                <div class="metadata-grid">
-                    <div class="metadata-item">
-                        <h3>Subjects</h3>
-                        <div id="bookSubjects"></div>
-                    </div>
-                    <div class="metadata-item">
-                        <h3>Publishers</h3>
-                        <div id="bookPublishers"></div>
-                    </div>
-                    <div class="metadata-item">
-                        <h3>ISBN</h3>
-                        <div id="bookISBNs"></div>
-                    </div>
-                </div>
+            <section class="external-links-section">
+                <div id="bookLinks"></div>
             </section>
 
+            <div class="metadata-item">
+                <span class="label">Subjects:</span>
+                <div id="bookSubjects"></div>
+            </div>
+            
             <section class="book-editions">
-                <h2>Available Editions</h2>
+                <div class="section-header">
+                    <h2>Available Editions</h2>
+                    <a href="#" class="view-all">View All</a>
+                </div>
                 <div id="bookEditions" class="editions-grid"></div>
             </section>
 
@@ -63,6 +124,7 @@
                 </div>
                 <div id="textSearchResults"></div>
             </section>
+
         </div>
 
         <div id="errorMessage" class="error-message hidden">
@@ -75,6 +137,8 @@
         <p>&copy; 2025 Open Library. Powered by Open Library APIs.</p>
     </footer>
 
+    <!-- Load dependencies in correct order -->
+    <script src="../js/utils.js"></script>
     <script src="../js/script.js"></script>
     <script src="../js/loadNav.js"></script>
     <script src="../js/book.js"></script>

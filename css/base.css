@@ -14,9 +14,18 @@
     --surface-color: #f5f5f5;
     --text-color: #333333;
     --text-secondary: #666666;
+    --text-tertiary: #888888;
     --border-color: #e0e0e0;
+    --error-color: #dc3545;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --hover-color: #f8f9fa;
+
+    /* Shadows */
     --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     --hover-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    --dropdown-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 
     /* Spacing */
     --spacing-xs: 0.25rem;
@@ -33,6 +42,16 @@
     /* Transitions */
     --transition-fast: 0.2s ease;
     --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+
+    /* Z-index layers */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
 
     /* Responsive breakpoints */
     --breakpoint-sm: 576px;
@@ -49,9 +68,12 @@
     --surface-color: #1e1e1e;
     --text-color: #ffffff;
     --text-secondary: #b0b0b0;
+    --text-tertiary: #808080;
     --border-color: #333333;
+    --hover-color: #282828;
     --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     --hover-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    --dropdown-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 /* Base styles */
@@ -77,38 +99,30 @@ a:hover {
 .container {
     width: 100%;
     margin: 0 auto;
-    padding: 0;
+    padding: 0 var(--spacing-md);
 }
 
 @media (min-width: 576px) {
     .container {
         max-width: 540px;
-        margin: 0 auto;
-        padding: 0;
     }
 }
 
 @media (min-width: 768px) {
     .container {
         max-width: 720px;
-        margin: 0 auto;
-        padding: 0;
     }
 }
 
 @media (min-width: 992px) {
     .container {
         max-width: 960px;
-        margin: 0 auto;
-        padding: 0;
     }
 }
 
 @media (min-width: 1200px) {
     .container {
         max-width: 1140px;
-        margin: 0 auto;
-        padding: 0;
     }
 }
 

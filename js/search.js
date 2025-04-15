@@ -71,7 +71,16 @@ async function performSearch() {
 
     currentQuery = searchInput.value.trim();
     searchResults.innerHTML = '';
-    searchResults.appendChild(window.libraryUtils.showLoading());
+    pagination.classList.add('hidden');
+    
+    // Create a wrapper div for positioning
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'relative';
+    wrapper.style.minHeight = '400px';  // Give some height for the spinner
+    wrapper.appendChild(window.libraryUtils.showLoading());
+    searchResults.appendChild(wrapper);
+    
+    resultsCount.classList.add('hidden');
     
     try {
         let searchUrl = '';
@@ -134,9 +143,12 @@ function displayResults(data) {
             author_name: [data.authors?.[0]?.name || 'Unknown Author'],
             first_publish_year: data.publish_date,
             cover_i: data.covers?.[0],
-            key: `/works/${data.key}`
+            key: data.works?.[0]?.key || `/works/${data.key}`,
+            edition_count: data.edition_count || 0,
+            has_fulltext: data.has_fulltext || false,
+            preview: data.preview || "noview"
         };
-        searchResults.appendChild(window.libraryUtils.createBookCard(book));
+        searchResults.appendChild(createEnhancedBookCard(book));
         totalResults = 1;
         
     } else {
@@ -150,12 +162,68 @@ function displayResults(data) {
         }
 
         results.forEach(book => {
-            searchResults.appendChild(window.libraryUtils.createBookCard(book));
+            // Ensure book has the correct works key format
+            if (!book.key.startsWith('/works/')) {
+                book.key = `/works/${book.key}`;
+            }
+            searchResults.appendChild(createEnhancedBookCard(book));
         });
     }
 
     totalResultsSpan.textContent = totalResults;
     pagination.classList.toggle('hidden', totalResults <= 10);
+}
+
+// Create an enhanced book card with editions and availability info
+function createEnhancedBookCard(book) {
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    
+    const coverUrl = book.cover_i 
+        ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
+        : '../images/default-cover.jpg';
+
+    // Determine availability status
+    const readStatus = book.has_fulltext ? 
+        '<span class="status available">Available to Read</span>' : 
+        '<span class="status unavailable">Not Available to Read</span>';
+
+    // Determine preview status
+    let previewStatus = '';
+    switch(book.preview) {
+        case 'full':
+            previewStatus = '<span class="status preview-full">Full Preview</span>';
+            break;
+        case 'partial':
+            previewStatus = '<span class="status preview-partial">Partial Preview</span>';
+            break;
+        default:
+            previewStatus = '<span class="status preview-none">No Preview</span>';
+    }
+
+    card.innerHTML = `
+        <img src="${coverUrl}" alt="${book.title}" class="result-image">
+        <div class="result-info">
+            <h3 class="result-title">${book.title}</h3>
+            <p class="result-author">${book.author_name ? book.author_name[0] : 'Unknown Author'}</p>
+            <p class="result-year">${book.first_publish_year ? `First published: ${book.first_publish_year}` : ''}</p>
+            <div class="editions-info">
+                <span class="editions-count">${book.edition_count || 0} editions</span>
+            </div>
+            <div class="availability-info">
+                ${readStatus}
+                ${previewStatus}
+            </div>
+        </div>
+    `;
+
+    // Make card clickable with correct works URL format
+    card.addEventListener('click', () => {
+        const workKey = book.key.startsWith('/works/') ? book.key : `/works/${book.key}`;
+        window.location.href = `../pages/book.html?key=${workKey}`;
+    });
+
+    return card;
 }
 
 function updatePagination(data) {
