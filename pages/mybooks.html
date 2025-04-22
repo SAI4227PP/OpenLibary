@@ -48,28 +48,54 @@
 
                 <div class="tab-content">
                     <div id="favorites" class="tab-pane active">
+                        <div class="filter-bar">
+                            <select id="favoritesSort">
+                                <option value="title">Sort by Title</option>
+                                <option value="author">Sort by Author</option>
+                                <option value="dateAdded">Sort by Date Added</option>
+                            </select>
+                        </div>
                         <div class="book-grid" id="favoritesGrid"></div>
                     </div>
-                    <div id="currently" class="tab-pane">
+                    <div id="currently" class="tab-pane hidden">
+                        <div class="filter-bar">
+                            <select id="currentlySort">
+                                <option value="title">Sort by Title</option>
+                                <option value="author">Sort by Author</option>
+                                <option value="progress">Sort by Progress</option>
+                            </select>
+                        </div>
                         <div class="book-grid" id="currentlyGrid"></div>
                     </div>
-                    <div id="wantto" class="tab-pane">
+                    <div id="wantto" class="tab-pane hidden">
+                        <div class="filter-bar">
+                            <select id="wanttoSort">
+                                <option value="title">Sort by Title</option>
+                                <option value="author">Sort by Author</option>
+                                <option value="dateAdded">Sort by Date Added</option>
+                            </select>
+                        </div>
                         <div class="book-grid" id="wanttoGrid"></div>
                     </div>
-                    <div id="completed" class="tab-pane">
-                        <div class="book-grid" id="completedGrid">
-                            <div class="filter-bar">
-                                <select id="yearFilter">
-                                    <option value="all">All Years</option>
-                                </select>
-                                <select id="ratingFilter">
-                                    <option value="all">All Ratings</option>
-                                    <option value="5">5 Stars</option>
-                                    <option value="4">4+ Stars</option>
-                                    <option value="3">3+ Stars</option>
-                                </select>
-                            </div>
+                    <div id="completed" class="tab-pane hidden">
+                        <div class="filter-bar">
+                            <select id="yearFilter">
+                                <option value="all">All Years</option>
+                            </select>
+                            <select id="ratingFilter">
+                                <option value="all">All Ratings</option>
+                                <option value="5">5 Stars</option>
+                                <option value="4">4+ Stars</option>
+                                <option value="3">3+ Stars</option>
+                            </select>
+                            <select id="completedSort">
+                                <option value="dateCompleted">Sort by Date Completed</option>
+                                <option value="rating">Sort by Rating</option>
+                                <option value="title">Sort by Title</option>
+                                <option value="author">Sort by Author</option>
+                            </select>
                         </div>
+                        <div class="book-grid" id="completedGrid"></div>
                     </div>
                 </div>
             </section>
@@ -130,8 +156,10 @@
         <p>&copy; 2025 Open Library. Powered by Open Library APIs.</p>
     </footer>
 
-    <script src="../js/loadNav.js"></script>
+    <script src="../js/libraryUtils.js"></script>
+    <script src="../js/utils.js"></script>
     <script src="../js/script.js"></script>
+    <script src="../js/loadNav.js"></script>
     <script src="../js/mybooks.js"></script>
 </body>
 </html>

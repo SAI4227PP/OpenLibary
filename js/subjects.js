@@ -1,5 +1,5 @@
 // DOM Elements
-const subjectSearch = document.getElementById('subjectSearch');
+const subjectSearch = document.getElementById('searchInput');
 const popularSubjects = document.getElementById('popularSubjects');
 const subjectContent = document.getElementById('subjectContent');
 const currentSubjectTitle = document.getElementById('currentSubject');
@@ -12,6 +12,8 @@ const nextPageBtn = document.getElementById('nextPage');
 const currentPageSpan = document.getElementById('currentPage');
 const loading = document.getElementById('loading');
 const errorMessage = document.getElementById('errorMessage');
+
+
 
 // Subject state
 let currentSubject = '';
@@ -68,23 +70,44 @@ async function initializePopularSubjects() {
 async function loadSubjectBooks(subject) {
     currentSubject = subject;
     showLoading();
+    subjectContent.classList.add('hidden');
     
     try {
         // Fetch subject data
         subjectData = await window.libraryUtils.getSubjects(subject);
         subjectBooksList = subjectData.works || [];
         
+        // Enhance book data with additional fields
+        subjectBooksList = subjectBooksList.map(book => ({
+            ...book,
+            key: book.key.startsWith('/works/') ? book.key : `/works/${book.key}`,
+            cover_i: book.cover_id, // Map cover_id to cover_i for consistency
+            author_name: book.authors?.map(a => a.name) || ['Unknown Author']
+        }));
+        
+        // Reset to first page when loading new subject
+        currentPage = 1;
+        
         // Update UI
         updateSubjectUI();
         sortBooks();
-        displayBooks();
         
+        // Small delay to ensure loading bar is visible even for fast loads
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        displayBooks();
         hideLoading();
+        
+        // Show content and pagination
         subjectContent.classList.remove('hidden');
+        if (subjectBooksList.length > 12) { // Only show pagination if there's more than one page
+            subjectPagination.classList.remove('hidden');
+        }
         
     } catch (error) {
         console.error('Error loading subject books:', error);
         showError();
+        hideLoading();
     }
 }
 
@@ -103,58 +126,138 @@ function updateSubjectUI() {
     subjectStats.textContent = stats.join(' • ');
 }
 
-// Sort books
+// Sort books with animation
 function sortBooks() {
-    switch (currentSort) {
-        case 'title':
-            subjectBooksList.sort((a, b) => a.title.localeCompare(b.title));
-            break;
-        case 'rating':
-            subjectBooksList.sort((a, b) => (b.rating_average || 0) - (a.rating_average || 0));
-            break;
-        case 'old':
-            subjectBooksList.sort((a, b) => {
-                const dateA = a.first_publish_date ? new Date(a.first_publish_date) : new Date(0);
-                const dateB = b.first_publish_date ? new Date(b.first_publish_date) : new Date(0);
-                return dateA - dateB;
-            });
-            break;
-        case 'new':
-        default:
-            subjectBooksList.sort((a, b) => {
-                const dateA = a.first_publish_date ? new Date(a.first_publish_date) : new Date(0);
-                const dateB = a.first_publish_date ? new Date(a.first_publish_date) : new Date(0);
-                return dateB - dateA;
-            });
-            break;
-    }
+    // First fade out the current books
+    subjectBooksContainer.style.opacity = '0';
+    subjectBooksContainer.style.transform = 'translateY(10px)';
+    
+    setTimeout(() => {
+        switch (currentSort) {
+            case 'title':
+                subjectBooksList.sort((a, b) => a.title.localeCompare(b.title));
+                break;
+            case 'rating':
+                subjectBooksList.sort((a, b) => (b.rating_average || 0) - (a.rating_average || 0));
+                break;
+            case 'old':
+                subjectBooksList.sort((a, b) => {
+                    const dateA = a.first_publish_date ? new Date(a.first_publish_date) : new Date(0);
+                    const dateB = b.first_publish_date ? new Date(b.first_publish_date) : new Date(0);
+                    return dateA - dateB;
+                });
+                break;
+            case 'new':
+            default:
+                subjectBooksList.sort((a, b) => {
+                    const dateA = a.first_publish_date ? new Date(a.first_publish_date) : new Date(0);
+                    const dateB = b.first_publish_date ? new Date(b.first_publish_date) : new Date(0);
+                    return dateB - dateA;
+                });
+                break;
+        }
+        
+        displayBooks();
+        
+        // Fade in the sorted books
+        requestAnimationFrame(() => {
+            subjectBooksContainer.style.opacity = '1';
+            subjectBooksContainer.style.transform = 'translateY(0)';
+        });
+    }, 300); // Wait for fade out to complete
 }
 
 // Display books with pagination
 function displayBooks() {
-    subjectBooksContainer.innerHTML = '';
+    // First fade out current books
+    subjectBooksContainer.style.opacity = '0';
+    subjectBooksContainer.style.transform = 'translateY(10px)';
     
-    const itemsPerPage = 12;
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const pageBooks = subjectBooksList.slice(start, end);
+    setTimeout(() => {
+        subjectBooksContainer.innerHTML = '';
+        
+        const itemsPerPage = 12;
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const pageBooks = subjectBooksList.slice(start, end);
+        const totalPages = Math.ceil(subjectBooksList.length / itemsPerPage);
+        
+        if (pageBooks.length === 0) {
+            subjectBooksContainer.innerHTML = '<p>No books found for this subject.</p>';
+            subjectPagination.classList.add('hidden');
+            return;
+        }
+
+        pageBooks.forEach(book => {
+            const card = document.createElement('div');
+            card.className = 'book-card';
+            
+            const coverUrl = book.cover_i ? 
+                `${window.libraryUtils.COVERS_BASE_URL}/id/${book.cover_i}-M.jpg` :
+                '../images/default-cover.jpg';
+
+            card.innerHTML = `
+                <div class="book-cover">
+                    <img src="${coverUrl}" 
+                         alt="${book.title}" 
+                         onerror="this.parentNode.innerHTML='<div class=\\'no-cover-placeholder\\'>No Cover</div>'"
+                         loading="lazy">
+                </div>
+                <div class="book-info">
+                    <h3 class="book-title">${book.title}</h3>
+                    <p class="book-author">${book.author_name[0] || 'Unknown Author'}</p>
+                    ${book.first_publish_year ? `<span class="book-year">${book.first_publish_year}</span>` : ''}
+                </div>
+            `;
+
+            card.addEventListener('click', () => {
+                window.location.href = `book.html?key=${encodeURIComponent(book.key)}`;
+            });
+
+            subjectBooksContainer.appendChild(card);
+        });
+
+        // Update pagination visibility and state
+        if (totalPages > 1) {
+            subjectPagination.classList.remove('hidden');
+            currentPageSpan.textContent = `Page ${currentPage} of ${totalPages}`;
+            prevPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = currentPage === totalPages;
+        } else {
+            subjectPagination.classList.add('hidden');
+        }
+        
+        // Fade in new books
+        requestAnimationFrame(() => {
+            subjectBooksContainer.style.opacity = '1';
+            subjectBooksContainer.style.transform = 'translateY(0)';
+        });
+    }, 300); // Wait for fade out to complete
+}
+
+// Search functionality
+function handleSubjectSearch(query) {
+    query = query.trim().toLowerCase();
+    if (query.length < 2) return;
     
-    if (pageBooks.length === 0) {
-        subjectBooksContainer.innerHTML = '<p>No books found for this subject.</p>';
-        subjectPagination.classList.add('hidden');
-        return;
-    }
-
-    pageBooks.forEach(book => {
-        subjectBooksContainer.appendChild(window.libraryUtils.createBookCard(book));
-    });
-
-    // Update pagination
-    const totalPages = Math.ceil(subjectBooksList.length / itemsPerPage);
-    subjectPagination.classList.toggle('hidden', totalPages <= 1);
-    currentPageSpan.textContent = `Page ${currentPage} of ${totalPages}`;
-    prevPageBtn.disabled = currentPage === 1;
-    nextPageBtn.disabled = currentPage === totalPages;
+    showLoading();
+    fetch(`${API_BASE_URL}/subjects/${encodeURIComponent(query)}.json`)
+        .then(response => {
+            if (!response.ok) throw new Error('Subject not found');
+            return response.json();
+        })
+        .then(data => {
+            if (data.works && data.works.length > 0) {
+                loadSubjectBooks(query);
+            } else {
+                showError();
+                errorMessage.textContent = 'No books found for this subject';
+            }
+        })
+        .catch(error => {
+            console.error('Error searching subjects:', error);
+            showError();
+        });
 }
 
 // Event listeners
@@ -166,21 +269,13 @@ popularSubjects.addEventListener('click', (e) => {
     }
 });
 
-subjectSearch.addEventListener('input', debounce(async (e) => {
-    const query = e.target.value.trim().toLowerCase();
-    if (query.length < 2) return;
-    
-    try {
-        const response = await fetch(`${API_BASE_URL}/subjects/${encodeURIComponent(query)}.json`);
-        const data = await response.json();
-        
-        if (data.works && data.works.length > 0) {
-            loadSubjectBooks(query);
-        }
-    } catch (error) {
-        console.error('Error searching subjects:', error);
-    }
+subjectSearch.addEventListener('input', debounce((e) => {
+    handleSubjectSearch(e.target.value);
 }, 300));
+
+document.getElementById('searchButton').addEventListener('click', () => {
+    handleSubjectSearch(subjectSearch.value);
+});
 
 sortBooksSelect.addEventListener('change', () => {
     currentSort = sortBooksSelect.value;
