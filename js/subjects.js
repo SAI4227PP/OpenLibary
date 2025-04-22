@@ -39,14 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    const params = new URLSearchParams(window.location.search);
-    const subject = params.get('subject');
-    
-    if (subject) {
-        loadSubjectBooks(subject);
-    } else {
-        initializePopularSubjects();
-    }
+    initializePopularSubjects();
 });
 
 // Initialize popular subjects
@@ -130,7 +123,7 @@ function sortBooks() {
         default:
             subjectBooksList.sort((a, b) => {
                 const dateA = a.first_publish_date ? new Date(a.first_publish_date) : new Date(0);
-                const dateB = b.first_publish_date ? new Date(b.first_publish_date) : new Date(0);
+                const dateB = a.first_publish_date ? new Date(a.first_publish_date) : new Date(0);
                 return dateB - dateA;
             });
             break;
@@ -169,7 +162,7 @@ popularSubjects.addEventListener('click', (e) => {
     const card = e.target.closest('.subject-card');
     if (card) {
         const subject = card.dataset.subject;
-        window.location.href = `subjects.html?subject=${encodeURIComponent(subject)}`;
+        loadSubjectBooks(subject);
     }
 });
 
@@ -182,7 +175,7 @@ subjectSearch.addEventListener('input', debounce(async (e) => {
         const data = await response.json();
         
         if (data.works && data.works.length > 0) {
-            window.location.href = `subjects.html?subject=${encodeURIComponent(query)}`;
+            loadSubjectBooks(query);
         }
     } catch (error) {
         console.error('Error searching subjects:', error);

@@ -47,7 +47,9 @@ window.libraryUtils = {
 
         card.addEventListener('click', () => {
             const workKey = book.key.startsWith('/works/') ? book.key : `/works/${book.key}`;
-            window.location.href = `/pages/book.html?key=${encodeURIComponent(workKey)}`;
+            // Use relative path based on current location
+            const path = window.location.pathname.includes('/pages/') ? 'book.html' : 'pages/book.html';
+            window.location.href = `${path}?key=${encodeURIComponent(workKey)}`;
         });
 
         return card;

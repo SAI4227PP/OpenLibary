@@ -8,7 +8,7 @@ const rememberMe = document.getElementById('rememberMe');
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', () => {
-    // Check if user is already logged in and came from another page
+    // Check if user is already logged in
     const user = checkAuth();
     if (user && document.referrer) {
         redirectToHome();
@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
         emailInput.value = rememberedEmail;
         rememberMe.checked = true;
     }
+    
+    // Update UI on load
+    updateAuthUI();
 });
 
 // Form submission
@@ -40,7 +43,7 @@ loginForm.addEventListener('submit', async (e) => {
             password: passwordInput.value
         };
         
-        // Simulate login
+        // Check against registered users
         const user = await loginUser(formData);
         
         if (user) {
@@ -53,14 +56,20 @@ loginForm.addEventListener('submit', async (e) => {
 
             // Save user session
             localStorage.setItem('user', JSON.stringify(user));
+            
+            // Update navigation UI
+            updateAuthUI();
 
             // Redirect to previous page or home
             const redirect = new URLSearchParams(window.location.search).get('redirect');
             window.location.href = redirect || '../index.html';
+        } else {
+            alert('Invalid email or password');
         }
 
     } catch (error) {
         console.error('Login error:', error);
+        alert('An error occurred during login');
     } finally {
         hideLoading();
     }
@@ -73,16 +82,20 @@ togglePasswordBtn.addEventListener('click', () => {
     togglePasswordBtn.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
 });
 
-// User login simulation
+// User login verification
 async function loginUser(credentials) {
-    const mockUser = {
-        email: 'test@example.com',
-        password: 'Test123!',
-        name: 'Test User'
-    };
+    // Get registered users from localStorage
+    const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+    
+    // Find matching user
+    const matchedUser = registeredUsers.find(user => 
+        user.email === credentials.email && 
+        user.password === credentials.password
+    );
 
-    if (credentials.email === mockUser.email && credentials.password === mockUser.password) {
-        const { password, ...user } = mockUser;
+    if (matchedUser) {
+        // Remove password from session data
+        const { password, ...user } = matchedUser;
         return user;
     }
 

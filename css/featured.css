@@ -36,14 +36,14 @@
 
 .book-card {
     width: 100%;
-    height: 280px;
+    height: 320px;  /* Increased height further to give more space for title */
     display: flex;
     flex-direction: column;
     background: var(--surface-color);
     border-radius: var(--border-radius-md);
     overflow: hidden;
     transition: transform 0.2s;
-    padding: var(--spacing-xs);
+    padding: var(--spacing-sm); /* Increased padding */
 }
 
 .book-card:hover {
@@ -52,7 +52,8 @@
 
 .book-cover {
     height: 200px;
-    margin-bottom: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);  /* Increased margin below cover */
+    position: relative;
 }
 
 .book-cover img {
@@ -62,31 +63,49 @@
     border-radius: var(--border-radius-sm);
 }
 
+.no-cover-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-color-alt);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-secondary);
+    font-size: 1rem;
+    text-align: center;
+    padding: 1rem;
+    border: 1px dashed var(--border-color);
+}
+
 .book-info {
-    padding: var(--spacing-xs);
+    padding: 0 var(--spacing-sm);  /* Added horizontal padding */
     display: flex;
     flex-direction: column;
-    gap: 1px;
+    gap: var(--spacing-sm);  /* Increased gap between elements */
     flex: 1;
     min-height: 0;
 }
 
 .book-title {
-    font-size: 0.95rem;
-    font-weight: 500;
-    line-height: 1.1;
-    margin-bottom: 2px;
+    font-size: 1.1rem;  /* Increased font size */
+    font-weight: 600;   /* Made font bolder */
+    line-height: 1.4;   /* Increased line height for better readability */
+    margin-bottom: var(--spacing-xs);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    color: var(--text-color);
+    word-break: break-word; /* Allow long words to break */
+    hyphens: auto;         /* Enable hyphenation */
 }
 
 .book-author {
-    font-size: 0.85rem;
+    font-size: 0.9rem;  /* Slightly larger */
     color: var(--text-secondary);
-    margin-bottom: 2px;
+    margin-bottom: var(--spacing-xs);
     display: -webkit-box;
     -webkit-line-clamp: 1;
     line-clamp: 1;
@@ -95,7 +114,7 @@
 }
 
 .book-year {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: var(--text-secondary);
     margin-top: auto;
     display: block;
@@ -157,32 +176,30 @@
 @media (max-width: 768px) {
     .books-grid {
         grid-template-columns: repeat(3, 1fr);
-        gap: 0.5rem;
+        gap: 1rem;  /* Increased gap for better separation */
     }
 
     .book-card {
-        height: 220px;
+        height: 280px;
     }
 
     .book-cover {
-        height: 150px;
+        height: 160px;
+        margin-bottom: var(--spacing-sm);
     }
 
     .book-info {
-        padding: 4px;
-        min-height: 80px;
-        gap: 2px;
+        padding: 0 var(--spacing-xs);
     }
 
     .book-title {
-        font-size: 0.82rem;
-        line-height: 1.2;
-        -webkit-line-clamp: 2;
+        font-size: 1rem;
+        line-height: 1.3;
+        font-weight: 600;
     }
 
     .book-author {
-        font-size: 0.75rem;
-        -webkit-line-clamp: 1;
+        font-size: 0.85rem;
     }
 
     .book-year {
@@ -199,16 +216,17 @@
 
 @media (max-width: 480px) {
     .books-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0.3rem;
+        grid-template-columns: repeat(2, 1fr);  /* Show 2 columns on very small screens */
+        gap: 0.75rem;
     }
 
     .book-card {
-        height: 200px;  /* Increased height */
+        height: 260px;
     }
 
     .book-cover {
-        height: 120px;
+        height: 140px;
+        margin-bottom: var(--spacing-xs);
     }
 
     .book-info {
@@ -218,9 +236,10 @@
     }
 
     .book-title {
-        font-size: 0.8rem;
-        line-height: 1.2;
+        font-size: 0.95rem;  /* Slightly larger than before */
+        line-height: 1.3;
         margin-bottom: 2px;
+        font-weight: 600;
     }
 
     .book-author {

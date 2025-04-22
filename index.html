@@ -207,6 +207,9 @@
             const loadingState = document.querySelector('.loading-state');
             
             try {
+                if (!container || !loadingState) return;
+                
+                // Show loading state
                 loadingState.style.display = 'flex';
                 container.style.display = 'none';
                 
@@ -215,22 +218,31 @@
                 const response = await window.libraryUtils.searchBooks(`subject:${randomSubject}`, 1);
                 const books = response.docs.slice(0, 12);
                 
-                const bookCards = books.map(book => {
+                if (!books || books.length === 0) {
+                    throw new Error('No books found');
+                }
+                
+                // Clear the container first
+                container.innerHTML = '';
+                
+                // Create and append each book card directly
+                books.forEach(book => {
                     const card = window.libraryUtils.createBookCard(book);
-                    return card.outerHTML;
-                }).join('');
+                    container.appendChild(card);
+                });
                 
-                container.innerHTML = bookCards;
-                
+                // Hide loading state and show content
                 loadingState.style.display = 'none';
-                container.style.display = 'flex'; // Changed from 'grid' to 'flex'
+                container.style.display = 'flex';
                 
                 // Initialize button states
                 updateCarouselButtons();
                 
             } catch (error) {
                 console.error('Error loading featured books:', error);
-                loadingState.innerHTML = '<p>Error loading books. Please try again later.</p>';
+                if (loadingState) {
+                    loadingState.innerHTML = '<p>Error loading books. Please try again later.</p>';
+                }
             }
         }
     </script>
