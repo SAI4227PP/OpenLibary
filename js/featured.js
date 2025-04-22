@@ -32,18 +32,22 @@ async function loadFeaturedBooks() {
             throw new Error('No books found');
         }
         
-        const bookCards = books.map(book => {
+        // Clear the grid first
+        featuredBooksGrid.innerHTML = '';
+        
+        // Create and append each book card
+        books.forEach(book => {
             const card = window.libraryUtils.createBookCard(book);
+            // The click handler is already added by createBookCard
             if (book.first_publish_date) {
                 const dateElem = document.createElement('span');
                 dateElem.className = 'book-date';
                 dateElem.textContent = `Published: ${book.first_publish_date}`;
                 card.querySelector('.book-info').appendChild(dateElem);
             }
-            return card.outerHTML;
-        }).join('');
+            featuredBooksGrid.appendChild(card);
+        });
         
-        featuredBooksGrid.innerHTML = bookCards;
         hideLoading();
         
     } catch (error) {

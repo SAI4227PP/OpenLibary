@@ -222,12 +222,14 @@
                     throw new Error('No books found');
                 }
                 
-                const bookCards = books.map(book => {
-                    const card = window.libraryUtils.createBookCard(book);
-                    return card.outerHTML;
-                }).join('');
+                // Clear the container first
+                container.innerHTML = '';
                 
-                container.innerHTML = bookCards;
+                // Create and append each book card directly
+                books.forEach(book => {
+                    const card = window.libraryUtils.createBookCard(book);
+                    container.appendChild(card);
+                });
                 
                 // Hide loading state and show content
                 loadingState.style.display = 'none';
