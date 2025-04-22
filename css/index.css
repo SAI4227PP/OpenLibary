@@ -377,6 +377,8 @@
     justify-content: center;
     align-items: center;
     min-height: clamp(200px, 40vh, 300px);
+    width: 100%;
+    position: relative;
 }
 
 .loading-spinner {
@@ -386,6 +388,21 @@
     border-radius: 50%;
     border-top-color: var(--primary-color);
     animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+    .loading-state {
+        min-height: 150px;
+    }
+    
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+    }
 }
 
 .skeleton {
@@ -412,10 +429,6 @@
     background: var(--surface-color);
     border-radius: var(--border-radius-sm);
     animation: pulse 1.5s infinite;
-}
-
-@keyframes spin {
-    100% { transform: rotate(360deg); }
 }
 
 @keyframes loading {
