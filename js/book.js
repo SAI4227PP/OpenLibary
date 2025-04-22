@@ -310,19 +310,20 @@ async function loadBookEditions(bookKey) {
             document.querySelector('.book-editions .section-header h2').textContent = 
                 `Available Editions (${data.entries.length})`;
 
-            // Show only first 6 editions initially
+            // Show only first 8 editions initially (same as related section)
             const editionsHTML = data.entries.slice(0, 7).map(edition => {
                 const coverId = edition.covers?.[0];
-                const coverContent = coverId 
-                    ? `<img src="${COVERS_BASE_URL}/id/${coverId}-M.jpg" alt="${edition.title}" 
-                        loading="lazy"
-                        onerror="this.replaceWith(document.createElement('div').appendChild(
-                            document.createTextNode('No Cover')).parentElement.className='no-cover-placeholder')">`
-                    : `<div class="no-cover-placeholder">No Cover</div>`;
+                const coverUrl = coverId 
+                    ? `${COVERS_BASE_URL}/id/${coverId}-M.jpg`
+                    : '../images/no-cover.png';
                 
                 return `
-                    <div class="edition-card">
-                        ${coverContent}
+                    <div class="edition-card" onclick="window.location.href='editions.html?key=${encodeURIComponent(bookKey)}'">
+                        <img src="${coverUrl}" 
+                             alt="${edition.title}" 
+                             loading="lazy"
+                             onerror="this.src='../images/no-cover.png'"
+                             class="edition-cover">
                         <div class="edition-info">
                             <h3>${edition.title}</h3>
                             <p class="publish-date">${edition.publish_date || 'Publication date unknown'}</p>
@@ -337,9 +338,9 @@ async function loadBookEditions(bookKey) {
             
             editionsContainer.innerHTML = editionsHTML;
 
-            // Show View All link only if there are more than 6 editions
+            // Show View All link only if there are more than 8 editions
             const viewAllLink = document.querySelector('.book-editions .view-all');
-            viewAllLink.style.display = data.entries.length > 7 ? 'block' : 'none';
+            viewAllLink.style.display = data.entries.length > 8 ? 'block' : 'none';
         } else {
             document.querySelector('.book-editions .section-header h2').textContent = 'Available Editions (0)';
             editionsContainer.innerHTML = '<p>No other editions available.</p>';
