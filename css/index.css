@@ -169,28 +169,26 @@
     margin-right: auto;
 }
 
-.stat-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    min-width: 100px;
-}
-
-.stat-item span {
+.hero .hero-stats .stat-item span {
     display: block;
     font-size: clamp(2rem, 4vw, 2.5rem);
     font-weight: bold;
     margin-bottom: var(--spacing-xs);
-    color: white;
+    color: var(--text-color);
 }
 
-.stat-item label {
+.hero .hero-stats .stat-item label {
     font-size: 1rem;
     opacity: 0.9;
-    color: white;
+    color: var(--text-color);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+/* Dark theme adjustments */
+.dark-mode .hero .hero-stats .stat-item span,
+.dark-mode .hero .hero-stats .stat-item label {
+    color: white;
 }
 
 .featured-books {
