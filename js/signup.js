@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
         redirectToHome();
         return;
     }
+    
+    updateAuthUI();
 });
 
 // Form submission
@@ -37,17 +39,24 @@ signupForm.addEventListener('submit', async (e) => {
             password: passwordInput.value
         };
         
-        // Simulate user registration
-        const user = await registerUser(formData);
+        // Store user data in localStorage
+        localStorage.setItem('registeredUsers', JSON.stringify([
+            ...JSON.parse(localStorage.getItem('registeredUsers') || '[]'),
+            formData
+        ]));
+
+        // Remove password from session data
+        const { password, ...user } = formData;
         
-        if (user) {
-            // Save user session
-            localStorage.setItem('user', JSON.stringify(user));
+        // Save user session
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        // Update navigation UI
+        updateAuthUI();
             
-            // Show success message and redirect
-            alert('Account created successfully! Welcome to Open Library.');
-            window.location.href = '../index.html';
-        }
+        // Show success message and redirect
+        alert('Account created successfully! Welcome to Open Library.');
+        window.location.href = '../index.html';
 
     } catch (error) {
         console.error('Registration error:', error);
@@ -68,13 +77,6 @@ toggleConfirmPasswordBtn.addEventListener('click', () => {
     confirmPasswordInput.type = type;
     toggleConfirmPasswordBtn.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
 });
-
-// User registration simulation
-async function registerUser(userData) {
-    // For demo purposes, just return the user data
-    const { password, ...user } = userData;
-    return user;
-}
 
 // Loading state
 function showLoading() {

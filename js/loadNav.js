@@ -30,6 +30,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         .then(data => {
             document.getElementById('main-nav-placeholder').innerHTML = data;
             
+            // Update authentication UI after navigation is loaded
+            if (typeof updateAuthUI === 'function') {
+                setTimeout(() => {
+                    updateAuthUI();
+                }, 0);
+            }
+            
             // Dispatch custom event to notify that navigation is loaded
             document.dispatchEvent(new CustomEvent('navigationLoaded'));
         })

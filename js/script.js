@@ -13,19 +13,23 @@ function updateAuthUI() {
     const userOnlyElements = document.querySelectorAll('.user-only');
     const guestOnlyElements = document.querySelectorAll('.guest-only');
 
-    userOnlyElements.forEach(element => {
-        element.classList.toggle('hidden', !user);
-    });
-
-    guestOnlyElements.forEach(element => {
-        element.classList.toggle('hidden', !!user);
-    });
+    if (user) {
+        // User is logged in - show user-only elements, hide guest-only elements
+        userOnlyElements.forEach(element => element.classList.remove('hidden'));
+        guestOnlyElements.forEach(element => element.classList.add('hidden'));
+    } else {
+        // User is logged out - hide user-only elements, show guest-only elements
+        userOnlyElements.forEach(element => element.classList.add('hidden'));
+        guestOnlyElements.forEach(element => element.classList.remove('hidden'));
+    }
 }
 
 function logout() {
+    // Remove only session-related data, keep registered users
     localStorage.removeItem('user');
     localStorage.removeItem('readingLog');
     localStorage.removeItem('userLists');
+    updateAuthUI(); // Update UI before redirect
     window.location.href = 'index.html';
 }
 
