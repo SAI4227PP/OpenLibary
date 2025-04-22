@@ -14,27 +14,27 @@ const featuredLists = {
         name: 'Best Classics',
         description: 'Essential classics everyone should read',
         books: [
-            '/works/OL1234W', // Pride and Prejudice
-            '/works/OL5678W', // Great Expectations
-            '/works/OL9012W'  // The Great Gatsby
+            '/works/OL45883W', // Pride and Prejudice
+            '/works/OL1513463W', // Great Expectations
+            '/works/OL23919W'  // The Great Gatsby
         ]
     },
     'science-picks': {
         name: 'Science Picks',
         description: 'Top science books for curious minds',
         books: [
-            '/works/OL3456W', // A Brief History of Time
-            '/works/OL7890W', // The Origin of Species
-            '/works/OL1234W'  // Cosmos
+            '/works/OL2947493W', // A Brief History of Time
+            '/works/OL1097129W', // The Origin of Species
+            '/works/OL59802W'  // Cosmos
         ]
     },
     'must-read-fantasy': {
         name: 'Must-Read Fantasy',
         description: 'Epic fantasy adventures',
         books: [
-            '/works/OL5678W', // The Lord of the Rings
-            '/works/OL9012W', // The Name of the Wind
-            '/works/OL3456W'  // A Game of Thrones
+            '/works/OL27448W', // The Lord of the Rings
+            '/works/OL10099464W', // The Name of the Wind
+            '/works/OL2163649W'  // A Game of Thrones
         ]
     }
 };
@@ -55,12 +55,20 @@ async function loadFeaturedLists() {
         
         if (list) {
             try {
-                let bookCount = 0;
+                let validBooks = 0;
+                let failedBooks = 0;
                 for (const bookKey of list.books) {
-                    const bookData = await window.libraryUtils.getBookDetails(bookKey);
-                    if (bookData) bookCount++;
+                    try {
+                        const bookData = await window.libraryUtils.getBookDetails(bookKey);
+                        if (bookData) validBooks++;
+                    } catch (err) {
+                        failedBooks++;
+                    }
                 }
-                card.querySelector('.book-count').textContent = `${bookCount} books`;
+                const countText = validBooks > 0 ? 
+                    `${validBooks} books` : 
+                    'Unable to load books';
+                card.querySelector('.book-count').textContent = countText;
             } catch (error) {
                 console.error('Error loading list:', error);
                 card.querySelector('.book-count').textContent = 'Error loading count';

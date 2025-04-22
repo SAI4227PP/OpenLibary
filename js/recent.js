@@ -19,6 +19,7 @@ let changes = [];
 // Initialize page
 document.addEventListener('DOMContentLoaded', () => {
     loadRecentChanges();
+    initializeTimeline();
 });
 
 // Load recent changes
@@ -26,13 +27,28 @@ async function loadRecentChanges() {
     showLoading();
     
     try {
-        const timestamp = getTimestampForRange(currentTimeRange);
-        const changesUrl = `${API_BASE_URL}/recentchanges.json?since=${timestamp}`;
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        
+        let changesUrl;
+        switch (currentTimeRange) {
+            case 'day':
+                changesUrl = `${API_BASE_URL}/recentchanges/${year}/${month}/${day}.json`;
+                break;
+            case 'month':
+                changesUrl = `${API_BASE_URL}/recentchanges/${year}/${month}.json`;
+                break;
+            default:
+                changesUrl = `${API_BASE_URL}/recentchanges/${year}.json`;
+                break;
+        }
         
         const response = await fetch(changesUrl);
         const data = await response.json();
         
-        changes = filterChangesByType(data.changes || []);
+        changes = filterChangesByType(data || []);
         displayChanges();
         
         if (currentChangeType === 'all' || currentChangeType === 'new') {
@@ -50,13 +66,33 @@ async function loadRecentChanges() {
 // Load new books
 async function loadNewBooks() {
     try {
-        const timestamp = getTimestampForRange(currentTimeRange);
-        const newBooksUrl = `${API_BASE_URL}/new.json?since=${timestamp}`;
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        
+        let newBooksUrl;
+        switch (currentTimeRange) {
+            case 'day':
+                newBooksUrl = `${API_BASE_URL}/recentchanges/${year}/${month}/${day}.json?type=/type/edition`;
+                break;
+            case 'month':
+                newBooksUrl = `${API_BASE_URL}/recentchanges/${year}/${month}.json?type=/type/edition`;
+                break;
+            default:
+                newBooksUrl = `${API_BASE_URL}/recentchanges/${year}.json?type=/type/edition`;
+                break;
+        }
         
         const response = await fetch(newBooksUrl);
         const data = await response.json();
         
-        displayNewBooks(data.new || []);
+        // Filter only new editions
+        const newEditions = (data || []).filter(change => 
+            change.type === '/type/edition' && !change.revision
+        );
+        
+        displayNewBooks(newEditions);
         
     } catch (error) {
         console.error('Error loading new books:', error);
@@ -101,15 +137,49 @@ function displayChanges() {
         const timestamp = new Date(change.timestamp).toLocaleString();
         const changeTypeIcon = getChangeTypeIcon(change.type);
         
+        // Get a meaningful title based on the change type and content
+        let title = change.title || 
+                   (change.changes && change.changes.title) || 
+                   (change.data && change.data.title);
+                   
+        if (!title) {
+            // Generate descriptive titles for common actions
+            if (change.comment) {
+                if (change.comment.includes('import new book')) {
+                    title = 'New Book Import';
+                } else if (change.comment.includes('import existing book')) {
+                    title = 'Book Update';
+                } else if (change.comment.includes('Created new account')) {
+                    title = 'New User Registration';
+                } else if (change.comment.includes('updating user preferences')) {
+                    title = 'User Settings Update';
+                } else {
+                    title = change.comment;
+                }
+            } else {
+                title = 'System Update';
+            }
+        }
+        
+        // Format author display
+        let authorText = '';
+        if (change.author) {
+            const authorName = typeof change.author === 'object' ? 
+                             (change.author.name || change.author.key) : 
+                             change.author;
+            // Remove /people/ prefix from author keys
+            authorText = `by ${authorName.replace('/people/', '')}`;
+        }
+        
         return `
             <div class="change-item">
                 <div class="change-icon">${changeTypeIcon}</div>
                 <div class="change-details">
                     <div class="change-title">
-                        <a href="${getChangeLink(change)}">${change.title || 'Untitled'}</a>
+                        <a href="${getChangeLink(change)}">${title}</a>
                     </div>
                     <div class="change-meta">
-                        ${change.author ? `by ${change.author}` : ''}
+                        ${authorText}
                         <span class="change-time">${timestamp}</span>
                     </div>
                     ${change.comment ? `<div class="change-comment">${change.comment}</div>` : ''}
@@ -160,13 +230,19 @@ function getTimestampForRange(range) {
 function getChangeTypeIcon(type) {
     switch (type) {
         case 'add-book':
+        case 'import new book':
             return '📚';
         case 'edit-book':
+        case 'import existing book':
             return '✏️';
         case 'add-author':
             return '👤';
         case 'edit-author':
             return '✍️';
+        case 'user-settings':
+            return '⚙️';
+        case 'new-account':
+            return '👋';
         default:
             return '🔄';
     }
@@ -183,6 +259,107 @@ function getChangeLink(change) {
         default:
             return '#';
     }
+}
+
+// Format timestamp to relative time
+function formatTimeAgo(timestamp) {
+    const now = new Date();
+    const date = new Date(timestamp);
+    const seconds = Math.floor((now - date) / 1000);
+    
+    if (seconds < 60) return 'just now';
+    if (seconds < 3600) return Math.floor(seconds / 60) + ' minutes ago';
+    if (seconds < 86400) return Math.floor(seconds / 3600) + ' hours ago';
+    
+    return date.toLocaleDateString('en-US', { 
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// Generate activity item HTML
+function createActivityItem(activity) {
+    return `
+        <div class="activity-item">
+            <div class="activity-card">
+                <div class="activity-header">
+                    <span class="activity-type">${activity.type}</span>
+                    <span class="activity-time">${formatTimeAgo(activity.timestamp)}</span>
+                </div>
+                <div class="activity-details">
+                    <span class="activity-user">${activity.user}</span>
+                    <p class="activity-description">${activity.description}</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Group activities by time period
+function groupActivitiesByPeriod(activities) {
+    const now = new Date();
+    const last24Hours = [];
+    const lastWeek = [];
+    const older = [];
+
+    activities.forEach(activity => {
+        const activityDate = new Date(activity.timestamp);
+        const hoursDiff = (now - activityDate) / (1000 * 60 * 60);
+
+        if (hoursDiff <= 24) {
+            last24Hours.push(activity);
+        } else if (hoursDiff <= 168) { // 7 days
+            lastWeek.push(activity);
+        } else {
+            older.push(activity);
+        }
+    });
+
+    return { last24Hours, lastWeek, older };
+}
+
+// Initialize the activity timeline
+function initializeTimeline() {
+    const timelineContainer = document.querySelector('.activity-timeline');
+    if (!timelineContainer) return;
+
+    // Add timeline line
+    const timelineLine = document.createElement('div');
+    timelineLine.className = 'timeline-line';
+    timelineContainer.appendChild(timelineLine);
+
+    // Fetch and display activities
+    fetchActivities().then(activities => {
+        const grouped = groupActivitiesByPeriod(activities);
+        
+        if (grouped.last24Hours.length > 0) {
+            timelineContainer.innerHTML += `
+                <h2 class="time-period-header">Last 24 Hours</h2>
+                ${grouped.last24Hours.map(createActivityItem).join('')}
+            `;
+        } else {
+            timelineContainer.innerHTML += `
+                <div class="no-activities">No new activities in the last 24 hours</div>
+            `;
+        }
+
+        if (grouped.lastWeek.length > 0) {
+            timelineContainer.innerHTML += `
+                <h2 class="time-period-header">Last Week</h2>
+                ${grouped.lastWeek.map(createActivityItem).join('')}
+            `;
+        }
+
+        if (grouped.older.length > 0) {
+            timelineContainer.innerHTML += `
+                <h2 class="time-period-header">Older</h2>
+                ${grouped.older.map(createActivityItem).join('')}
+            `;
+        }
+    });
 }
 
 // Event listeners

@@ -12,15 +12,15 @@
 
     <main class="recent-changes">
         <section class="recent-header">
-            <h1>What's New in Open Library</h1>
+            <h1>Discover What's New</h1>
             <div class="recent-filters">
-                <select id="changeType">
+                <select id="changeType" aria-label="Filter by change type">
                     <option value="all">All Changes</option>
                     <option value="new">New Books</option>
                     <option value="edit">Book Edits</option>
                     <option value="author">Author Updates</option>
                 </select>
-                <select id="timeRange">
+                <select id="timeRange" aria-label="Filter by time range">
                     <option value="day">Last 24 Hours</option>
                     <option value="week">Last Week</option>
                     <option value="month">Last Month</option>
@@ -36,7 +36,11 @@
 
             <div class="recent-updates">
                 <h2>Recent Updates</h2>
-                <div id="recentChanges" class="changes-list"></div>
+                <div class="activity-timeline">
+                    <div id="loading" class="loading hidden">Loading...</div>
+                    <div id="errorMessage" class="error hidden">Error loading recent changes</div>
+                    <div id="recentChanges" class="changes-list"></div>
+                </div>
             </div>
 
             <div id="pagination" class="pagination hidden">
@@ -45,18 +49,15 @@
                 <button id="nextPage">Next</button>
             </div>
         </section>
-
-        <div id="loading" class="loading hidden"></div>
-        
-        <div id="errorMessage" class="error-message hidden">
-            <p>Error loading recent changes. Please try again later.</p>
-        </div>
     </main>
 
     <footer>
         <p>&copy; 2025 Open Library. Powered by Open Library APIs.</p>
     </footer>
 
+    <!-- Load dependencies in correct order -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/libraryUtils.js"></script>
     <script src="../js/script.js"></script>
     <script src="../js/loadNav.js"></script>
     <script src="../js/recent.js"></script>

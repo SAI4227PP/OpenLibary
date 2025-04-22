@@ -6,15 +6,32 @@
     <title>Browse by Subject - Open Library</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/subjects.css">
+    <link rel="stylesheet" href="../css/search.css">
 </head>
 <body>
     <div id="main-nav-placeholder"></div>
 
     <main class="subjects-page">
-        <section class="subjects-header">
+        <section class="search-section">
             <h1>Browse by Subject</h1>
-            <div class="subject-search">
-                <input type="text" id="subjectSearch" placeholder="Search subjects...">
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search by title, author, or ISBN">
+                    <button id="searchButton">Search</button>
+                </div>
+                <div class="search-filters">
+                    <select id="searchType">
+                        <option value="all">All</option>
+                        <option value="title">Title</option>
+                        <option value="author">Author</option>
+                        <option value="isbn">ISBN</option>
+                        <option value="subject">Subject</option>
+                    </select>
+                    <label>
+                        <input type="checkbox" id="fullTextSearch">
+                        Full Text Search
+                    </label>
+                </div>
             </div>
         </section>
 
@@ -55,12 +72,15 @@
             </div>
 
             <div class="subject-controls">
-                <select id="sortBooks">
-                    <option value="new">Newest First</option>
-                    <option value="old">Oldest First</option>
-                    <option value="title">Title A-Z</option>
-                    <option value="rating">Highest Rated</option>
-                </select>
+                <div class="filter-group">
+                    <span class="filter-label">Sort by:</span>
+                    <select id="sortBooks">
+                        <option value="new">Newest First</option>
+                        <option value="old">Oldest First</option>
+                        <option value="title">Title A-Z</option>
+                        <option value="rating">Highest Rated</option>
+                    </select>
+                </div>
             </div>
 
             <div id="subjectBooks" class="book-grid"></div>
