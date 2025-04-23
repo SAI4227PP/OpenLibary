@@ -70,6 +70,10 @@
                     </div>
                     
                     <div class="book-actions">
+                        <button id="readBtn" class="read-btn">
+                            <i class="fas fa-book-reader"></i>
+                            Read Book
+                        </button>
                         <button id="favoriteBtn" class="favorite-btn">
                             <span class="heart-icon">♡</span>
                             Add to Favorites
@@ -136,6 +140,17 @@
     <footer>
         <p>&copy; 2025 Open Library. Powered by Open Library APIs.</p>
     </footer>
+
+    <!-- Add preview overlay at the end of the body, before scripts -->
+    <div class="preview-overlay" id="previewOverlay">
+        <div class="preview-container">
+            <div class="preview-header">
+                <h2>Reading: <span id="previewTitle"></span></h2>
+                <button class="preview-close" id="previewClose">&times;</button>
+            </div>
+            <iframe id="previewFrame" class="preview-frame"></iframe>
+        </div>
+    </div>
 
     <!-- Load dependencies in correct order -->
     <script src="../js/utils.js"></script>

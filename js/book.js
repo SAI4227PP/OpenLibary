@@ -8,6 +8,16 @@ const textSearchInput = document.getElementById('textSearchInput');
 const textSearchButton = document.getElementById('textSearchButton');
 const textSearchResults = document.getElementById('textSearchResults');
 
+// Add new DOM elements
+const readBtn = document.getElementById('readBtn');
+const previewOverlay = document.getElementById('previewOverlay');
+const previewFrame = document.getElementById('previewFrame');
+const previewTitle = document.getElementById('previewTitle');
+const previewClose = document.getElementById('previewClose');
+
+// Add Read API constants
+const READ_API_BASE_URL = 'http://openlibrary.org/api/volumes/brief';
+
 // Initialize all DOM elements with error handling
 const domElements = {
     bookTitle: document.getElementById('bookTitle'),
@@ -41,6 +51,7 @@ function validateDOMElements() {
 // Book state
 let currentBook = null;
 let currentBookKey = null;
+let readApiData = null;
 
 // Initialize book details page
 document.addEventListener('DOMContentLoaded', async () => {
@@ -84,11 +95,27 @@ async function loadBookDetails(bookKey) {
             fetch(`${API_BASE_URL}${workKey}/bookshelves.json`).then(res => res.json()).catch(() => null)
         ]);
 
+        // Add Read API check using ISBN if available
+        let readApiResponse = null;
+        if (workData.identifiers?.isbn_13?.[0]) {
+            readApiResponse = await fetch(`${READ_API_BASE_URL}/isbn/${workData.identifiers.isbn_13[0]}.json`)
+                .then(res => res.json())
+                .catch(() => null);
+        } else if (workData.identifiers?.isbn_10?.[0]) {
+            readApiResponse = await fetch(`${READ_API_BASE_URL}/isbn/${workData.identifiers.isbn_10[0]}.json`)
+                .then(res => res.json())
+                .catch(() => null);
+        }
+
+        // Store Read API data
+        readApiData = readApiResponse;
+
         // Merge all data
         currentBook = {
             ...workData,
             ratings: ratingsData,
             bookshelves: viewsData,
+            readingInfo: readApiResponse?.items?.[0] || null,
             averageRating: ratingsData?.summary?.average || 0,
             ratingsCount: ratingsData?.summary?.count || 0,
             readingCount: viewsData?.counts?.want_to_read || 0,
@@ -121,6 +148,9 @@ async function loadBookDetails(bookKey) {
         
         // Load related books
         await loadRelatedBooks(workKey);
+        
+        // Initialize reading features with the book data
+        await initializeReadingFeatures(currentBook);
         
         hideLoading();
         bookContent.classList.remove('hidden');
@@ -296,6 +326,81 @@ function updateBookUI(book) {
         showError();
     }
 }
+
+// Initialize reading functionality
+async function initializeReadingFeatures(book) {
+    if (!book) return;
+
+    const readBtn = document.getElementById('readBtn');
+    
+    if (book.readingInfo) {
+        const { status, itemURL } = book.readingInfo;
+        readBtn.classList.remove('disabled');
+        
+        switch (status) {
+            case 'full access':
+                readBtn.textContent = 'Read Online';
+                readBtn.addEventListener('click', () => openReader(book, itemURL));
+                break;
+            case 'lendable':
+                readBtn.textContent = 'Borrow Book';
+                readBtn.addEventListener('click', () => window.location.href = itemURL);
+                break;
+            case 'checked out':
+                disableReading('Book is currently checked out');
+                readBtn.textContent = 'Checked Out';
+                break;
+            case 'restricted':
+                disableReading('Access restricted');
+                readBtn.textContent = 'Not Available';
+                break;
+            default:
+                disableReading('Preview not available');
+        }
+    } else {
+        disableReading('Not available for online reading');
+        readBtn.textContent = 'Not Available';
+    }
+}
+
+function openReader(book, readUrl) {
+    if (!readUrl) {
+        console.error('No reading URL available');
+        return;
+    }
+
+    previewTitle.textContent = book.title;
+    previewFrame.src = readUrl;
+    previewOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeReader() {
+    previewOverlay.classList.remove('active');
+    previewFrame.src = '';
+    document.body.style.overflow = '';
+}
+
+function disableReading(message) {
+    const readBtn = document.getElementById('readBtn');
+    readBtn.classList.add('disabled');
+    readBtn.title = message;
+}
+
+// Close preview when clicking the close button or outside the preview
+previewClose.addEventListener('click', closeReader);
+previewOverlay.addEventListener('click', (e) => {
+    if (e.target === previewOverlay) {
+        closeReader();
+    }
+});
+
+// Handle escape key to close preview
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && previewOverlay.classList.contains('active')) {
+        closeReader();
+    }
+});
 
 // Load book editions
 async function loadBookEditions(bookKey) {
